@@ -134,6 +134,10 @@
       max-width: 400px;
       width: 100%;
       text-align: center;
+      /* iOSでスワイプを確実に検知するためブラウザのデフォルトジェスチャーを無効化 */
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     .date-label {
@@ -1398,15 +1402,13 @@
       "'Zen Antique', serif"
     ];
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const result = getRandomQuote();
+    function showQuote(result) {
       const quoteData = result.quoteData;
       const quoteEl = document.getElementById('quote');
       document.getElementById('dateLabel').textContent = formatDate();
       quoteEl.textContent = quoteData.text;
       document.getElementById('subtext').textContent = quoteData.sub;
 
-      // キラキラ表示のときクラスを付与＆黒背景テーマ
       if (result.sparkle) {
         quoteEl.classList.add('sparkle');
         document.body.className = 'theme-sparkle';
@@ -1415,9 +1417,43 @@
         document.body.className = 'theme-' + result.category;
       }
 
-      // 書体をランダムに適用
       const chosenFont = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
       document.documentElement.style.setProperty('--font-family', chosenFont);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showQuote(getRandomQuote());
+
+      const container = document.querySelector('.container');
+      const SWIPE_THRESHOLD = 50;
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      function onTouchStart(e) {
+        if (e.changedTouches.length !== 1) return;
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+      }
+
+      function onTouchMove(e) {
+        if (e.changedTouches.length !== 1) return;
+        e.preventDefault();
+      }
+
+      function onTouchEnd(e) {
+        if (e.changedTouches.length !== 1) return;
+        const touch = e.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) >= SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+          e.preventDefault();
+          showQuote(getRandomQuote());
+        }
+      }
+
+      container.addEventListener('touchstart', onTouchStart, { passive: true });
+      container.addEventListener('touchmove', onTouchMove, { passive: false });
+      container.addEventListener('touchend', onTouchEnd, { passive: false });
     });
   </script>
 </body>
