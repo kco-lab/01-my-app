@@ -126,8 +126,9 @@
     body.theme-keko {
       background: radial-gradient(ellipse at 50% 35%, #fff8fb 0%, #ffe8f2 50%, #ffd0e5 100%);
     }
-    body.theme-keko::before {
-      content: '';
+    /* 集中線の中心は JS で格言位置（#quote）に合わせる */
+    .keko-ray-layer {
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
@@ -135,12 +136,17 @@
       bottom: 0;
       pointer-events: none;
       z-index: 0;
+      --keko-cx: 50%;
+      --keko-cy: 42%;
       background: repeating-conic-gradient(
-        from 0deg at 50% 42%,
+        from 0deg at var(--keko-cx) var(--keko-cy),
         transparent 0deg 4.2deg,
         rgba(216, 100, 140, 0.14) 4.2deg 4.9deg
       );
       opacity: 0.95;
+    }
+    .keko-ray-layer.is-on {
+      display: block;
     }
     body.theme-keko .container {
       position: relative;
@@ -255,8 +261,10 @@
       transform: translateY(1px) scale(0.99);
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.10);
     }
-    .like-btn.primary {
-      background: linear-gradient(180deg, rgba(255, 210, 225, 0.98), rgba(255, 186, 208, 0.98));
+    .like-actions .like-btn {
+      background: #ffffff;
+      color: var(--text);
+      transition: transform 0.08s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
     .like-btn.picked-yes {
       background: linear-gradient(180deg, #ff7eb3, #ff5c9c) !important;
@@ -363,6 +371,7 @@
   </style>
 </head>
 <body>
+  <div class="keko-ray-layer" id="kekoRayLayer" aria-hidden="true"></div>
   <div class="container">
     <div class="swipe-track" id="swipeTrack">
       <div class="date-label" id="dateLabel"></div>
@@ -375,7 +384,7 @@
     <div class="like-card">
       <div class="like-title" id="likeTitle">気に入ってくれた？</div>
       <div class="like-actions">
-        <button class="like-btn primary" id="likeYesBtn" type="button">うん！</button>
+        <button class="like-btn" id="likeYesBtn" type="button">うん！</button>
         <button class="like-btn" id="likeOkBtn" type="button">まあまあ</button>
         <button class="like-btn" id="likeCloseBtn" type="button">つづける</button>
       </div>
@@ -1569,6 +1578,24 @@
       "'Zen Antique', serif"
     ];
 
+    function updateKekoRayLayer(result) {
+      const layer = document.getElementById('kekoRayLayer');
+      const quoteEl = document.getElementById('quote');
+      if (!layer || !quoteEl) return;
+      if (!result.sparkle && result.category === 'keko') {
+        layer.classList.add('is-on');
+        layer.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(() => {
+          const rect = quoteEl.getBoundingClientRect();
+          layer.style.setProperty('--keko-cx', `${rect.left + rect.width / 2}px`);
+          layer.style.setProperty('--keko-cy', `${rect.top + rect.height / 2}px`);
+        });
+      } else {
+        layer.classList.remove('is-on');
+        layer.setAttribute('aria-hidden', 'true');
+      }
+    }
+
     function showQuote(result) {
       const quoteData = result.quoteData;
       const quoteEl = document.getElementById('quote');
@@ -1592,6 +1619,8 @@
 
       const chosenFont = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
       document.documentElement.style.setProperty('--font-family', chosenFont);
+
+      updateKekoRayLayer(result);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1662,7 +1691,11 @@
         swipeTrack.style.transform = 'translateY(0)';
       }
 
+      let lastCommitAt = 0;
       function commitSwipeNavigation() {
+        const now = Date.now();
+        if (now - lastCommitAt < 280) return;
+        lastCommitAt = now;
         swipeTrack.style.transition = 'none';
         swipeTrack.style.transform = 'translateY(0)';
         totalSwipeCount += 1;
@@ -1709,8 +1742,14 @@
 
       function onTouchEnd(e) {
         if (overlayOpen) return;
-        const t = e.changedTouches[0];
-        if (touchTrackId === null || t.identifier !== touchTrackId) return;
+        let t = null;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchTrackId) {
+            t = e.changedTouches[i];
+            break;
+          }
+        }
+        if (touchTrackId === null || !t) return;
         const dx = t.clientX - touchStartX;
         const dy = t.clientY - touchStartY;
         const savedAxis = axisLock;
@@ -1742,8 +1781,14 @@
             snapSwipeTrackBack();
           }
         } else {
-          swipeTrack.style.transition = 'none';
-          swipeTrack.style.transform = 'translateY(0)';
+          const TAP_MAX = 14;
+          if (savedAxis === null && Math.abs(dx) <= TAP_MAX && Math.abs(dy) <= TAP_MAX) {
+            e.preventDefault();
+            commitSwipeNavigation();
+          } else {
+            swipeTrack.style.transition = 'none';
+            swipeTrack.style.transform = 'translateY(0)';
+          }
         }
       }
 
@@ -1758,6 +1803,20 @@
       container.addEventListener('touchmove', onTouchMove, { passive: false });
       container.addEventListener('touchend', onTouchEnd, { passive: false });
       container.addEventListener('touchcancel', onTouchCancel, { passive: true });
+
+      container.addEventListener('click', () => {
+        if (overlayOpen) return;
+        commitSwipeNavigation();
+      });
+
+      window.addEventListener('resize', () => {
+        const layer = document.getElementById('kekoRayLayer');
+        if (!layer || !layer.classList.contains('is-on')) return;
+        const quoteEl = document.getElementById('quote');
+        const rect = quoteEl.getBoundingClientRect();
+        layer.style.setProperty('--keko-cx', `${rect.left + rect.width / 2}px`);
+        layer.style.setProperty('--keko-cy', `${rect.top + rect.height / 2}px`);
+      });
 
       likeOverlay.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
     });
