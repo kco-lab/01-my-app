@@ -28,9 +28,6 @@
       --accent: #e8a0b4;
     }
 
-    /* おもしろい：淡いピンク（そのまま） */
-    body.theme-funny { /* デフォルトと同じ */ }
-
     /* まじめ：淡いみどり */
     body.theme-serious {
       --bg-1: #f0f9f4;
@@ -117,6 +114,39 @@
       z-index: 1;
     }
 
+    /* けこ格言：淡いピンク＋集中線（線は少し濃いピンク） */
+    body.theme-keko {
+      --bg-1: #fff5f9;
+      --bg-2: #ffe8f0;
+      --bg-3: #ffd6e8;
+      --text: #4a3540;
+      --text-soft: #6b5560;
+      --accent: #e87098;
+    }
+    body.theme-keko {
+      background: radial-gradient(ellipse at 50% 35%, #fff8fb 0%, #ffe8f2 50%, #ffd0e5 100%);
+    }
+    body.theme-keko::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: repeating-conic-gradient(
+        from 0deg at 50% 42%,
+        transparent 0deg 4.2deg,
+        rgba(216, 100, 140, 0.14) 4.2deg 4.9deg
+      );
+      opacity: 0.95;
+    }
+    body.theme-keko .container {
+      position: relative;
+      z-index: 1;
+    }
+
     /* キラキラ表示時：黒背景 */
     body.theme-sparkle {
       --bg-1: #0a0a0a;
@@ -138,6 +168,10 @@
       touch-action: none;
       -webkit-user-select: none;
       user-select: none;
+    }
+
+    .swipe-track {
+      will-change: transform;
     }
 
     /* 3回スワイプ後の「気に入ってくれた？」オーバーレイ */
@@ -223,6 +257,21 @@
     }
     .like-btn.primary {
       background: linear-gradient(180deg, rgba(255, 210, 225, 0.98), rgba(255, 186, 208, 0.98));
+    }
+    .like-btn.picked-yes {
+      background: linear-gradient(180deg, #ff7eb3, #ff5c9c) !important;
+      color: #fff !important;
+      box-shadow: 0 0 0 3px rgba(255, 92, 156, 0.45), 0 10px 24px rgba(255, 92, 156, 0.35);
+    }
+    .like-btn.picked-ok {
+      background: linear-gradient(180deg, #c9a8ff, #b088f5) !important;
+      color: #fff !important;
+      box-shadow: 0 0 0 3px rgba(160, 120, 240, 0.4), 0 10px 24px rgba(140, 100, 220, 0.3);
+    }
+    .like-btn.picked-go {
+      background: linear-gradient(180deg, #7ee0c3, #4dd4b0) !important;
+      color: #fff !important;
+      box-shadow: 0 0 0 3px rgba(77, 212, 176, 0.45), 0 10px 24px rgba(77, 212, 176, 0.3);
     }
 
     .date-label {
@@ -315,9 +364,11 @@
 </head>
 <body>
   <div class="container">
-    <div class="date-label" id="dateLabel"></div>
-    <p class="quote" id="quote"></p>
-    <div class="subtext" id="subtext"></div>
+    <div class="swipe-track" id="swipeTrack">
+      <div class="date-label" id="dateLabel"></div>
+      <p class="quote" id="quote"></p>
+      <div class="subtext" id="subtext"></div>
+    </div>
     <div class="refresh-hint">開くたびに新しいひとことが出るよ</div>
   </div>
   <div class="like-overlay" id="likeOverlay" role="dialog" aria-modal="true" aria-hidden="true">
@@ -1337,6 +1388,24 @@
       { text: "人生とは自転車のようなものだ。倒れないようにするには走り続けなければならない。", sub: "— アインシュタイン" },
     ];
 
+    // けこ格言
+    const kekoQuotes = [
+      { text: "けこは、卓球でホームラン打つ人。", sub: "— けこ格言" },
+      { text: "けこは、楽しさで動き、違和感で止まる。", sub: "— けこ格言" },
+      { text: "点と点が線どころか、曼荼羅。", sub: "— けこ格言" },
+      { text: "世界観が一貫してカオス。", sub: "— けこ格言" },
+      { text: "高次の秩序を持つ無秩序。", sub: "— けこ格言" },
+      { text: "解釈モデルが確定した。", sub: "— けこ格言" },
+      { text: "BBA＝Beautiful Brilliant Age", sub: "— けこ格言" },
+      { text: "とにかく、やれ。", sub: "— けこ格言" },
+      { text: "後悔してもいい、でも一瞬後悔したらはい次！！", sub: "— けこ格言" },
+      { text: "笑う門には福来る。", sub: "— けこ格言" },
+      { text: "笑って乗り切れ！！！", sub: "— けこ格言" },
+      { text: "一緒にスプラしてくれる？", sub: "— けこ格言" },
+      { text: "失敗してもただでは起きん！", sub: "— けこ格言" },
+      { text: "思考は現実化する。―ナポレオン・ヒル", sub: "— けこ格言" },
+    ];
+
     // 1割：AIが即興で作る格言
     const aiQuotes = [
       { text: "WiFiが繋がらない時こそ、人は本当の自分と向き合う。", sub: "— AI即興格言" },
@@ -1459,15 +1528,18 @@
       let pool;
       let category;
 
-      if (rand < 0.5) {
+      if (rand < 0.47) {
         pool = funnyQuotes;
         category = 'funny';
-      } else if (rand < 0.7) {
+      } else if (rand < 0.65) {
         pool = seriousQuotes;
         category = 'serious';
-      } else if (rand < 0.9) {
+      } else if (rand < 0.83) {
         pool = famousQuotes;
         category = 'famous';
+      } else if (rand < 0.91) {
+        pool = kekoQuotes;
+        category = 'keko';
       } else {
         pool = aiQuotes;
         category = 'ai';
@@ -1500,9 +1572,15 @@
     function showQuote(result) {
       const quoteData = result.quoteData;
       const quoteEl = document.getElementById('quote');
+      const swipeTrack = document.getElementById('swipeTrack');
       document.getElementById('dateLabel').textContent = formatDate();
       quoteEl.textContent = quoteData.text;
       document.getElementById('subtext').textContent = quoteData.sub;
+
+      if (swipeTrack) {
+        swipeTrack.style.transition = 'none';
+        swipeTrack.style.transform = 'translateY(0)';
+      }
 
       if (result.sparkle) {
         quoteEl.classList.add('sparkle');
@@ -1520,14 +1598,18 @@
       showQuote(getRandomQuote());
 
       const container = document.querySelector('.container');
+      const swipeTrack = document.getElementById('swipeTrack');
       const likeOverlay = document.getElementById('likeOverlay');
       const likeTitle = document.getElementById('likeTitle');
       const likeYesBtn = document.getElementById('likeYesBtn');
       const likeOkBtn = document.getElementById('likeOkBtn');
       const likeCloseBtn = document.getElementById('likeCloseBtn');
-      const SWIPE_THRESHOLD = 50;
+
+      const SWIPE_THRESHOLD = 40;
+      let touchTrackId = null;
       let touchStartX = 0;
       let touchStartY = 0;
+      let axisLock = null;
       let totalSwipeCount = 0;
       let overlayOpen = false;
       const milestoneMessages = new Map([
@@ -1539,60 +1621,144 @@
       ]);
       const shownMilestones = new Set();
 
+      function clearLikePick() {
+        likeYesBtn.classList.remove('picked-yes');
+        likeOkBtn.classList.remove('picked-ok');
+        likeCloseBtn.classList.remove('picked-go');
+      }
+
       function openLikeOverlay(message) {
+        clearLikePick();
         likeTitle.textContent = message;
         overlayOpen = true;
         likeOverlay.classList.add('is-open');
         likeOverlay.setAttribute('aria-hidden', 'false');
+        if (swipeTrack) {
+          swipeTrack.style.transition = 'none';
+          swipeTrack.style.transform = 'translateY(0)';
+        }
       }
 
       function closeLikeOverlay() {
         overlayOpen = false;
+        clearLikePick();
         likeOverlay.classList.remove('is-open');
         likeOverlay.setAttribute('aria-hidden', 'true');
       }
 
+      function bindLikePick(btn, pickClass) {
+        btn.addEventListener('click', () => {
+          clearLikePick();
+          btn.classList.add(pickClass);
+          window.setTimeout(closeLikeOverlay, 480);
+        });
+      }
+      bindLikePick(likeYesBtn, 'picked-yes');
+      bindLikePick(likeOkBtn, 'picked-ok');
+      bindLikePick(likeCloseBtn, 'picked-go');
+
+      function snapSwipeTrackBack() {
+        swipeTrack.style.transition = 'transform 0.28s cubic-bezier(0.33, 1, 0.68, 1)';
+        swipeTrack.style.transform = 'translateY(0)';
+      }
+
+      function commitSwipeNavigation() {
+        swipeTrack.style.transition = 'none';
+        swipeTrack.style.transform = 'translateY(0)';
+        totalSwipeCount += 1;
+        const milestoneMessage = milestoneMessages.get(totalSwipeCount);
+        if (milestoneMessage && !shownMilestones.has(totalSwipeCount)) {
+          shownMilestones.add(totalSwipeCount);
+          openLikeOverlay(milestoneMessage);
+          return;
+        }
+        showQuote(getRandomQuote());
+      }
+
       function onTouchStart(e) {
         if (overlayOpen) return;
-        if (e.changedTouches.length !== 1) return;
-        touchStartX = e.changedTouches[0].clientX;
-        touchStartY = e.changedTouches[0].clientY;
+        if (e.touches.length !== 1) return;
+        const t = e.touches[0];
+        touchTrackId = t.identifier;
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        axisLock = null;
+        swipeTrack.style.transition = 'none';
       }
 
       function onTouchMove(e) {
-        if (overlayOpen) return;
-        if (e.changedTouches.length !== 1) return;
-        e.preventDefault();
+        if (overlayOpen || touchTrackId === null) return;
+        let t = null;
+        for (let i = 0; i < e.touches.length; i++) {
+          if (e.touches[i].identifier === touchTrackId) {
+            t = e.touches[i];
+            break;
+          }
+        }
+        if (!t) return;
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        if (!axisLock && (Math.abs(dx) > 12 || Math.abs(dy) > 12)) {
+          axisLock = Math.abs(dy) >= Math.abs(dx) ? 'v' : 'h';
+        }
+        if (axisLock === 'v') {
+          e.preventDefault();
+          swipeTrack.style.transform = `translateY(${dy}px)`;
+        }
       }
 
       function onTouchEnd(e) {
         if (overlayOpen) return;
-        if (e.changedTouches.length !== 1) return;
-        const touch = e.changedTouches[0];
-        const deltaX = touch.clientX - touchStartX;
-        const deltaY = touch.clientY - touchStartY;
-        // 上下スワイプで切り替え（縦方向の移動が主体のとき）
-        if (Math.abs(deltaY) >= SWIPE_THRESHOLD && Math.abs(deltaY) > Math.abs(deltaX)) {
+        const t = e.changedTouches[0];
+        if (touchTrackId === null || t.identifier !== touchTrackId) return;
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        const savedAxis = axisLock;
+        touchTrackId = null;
+        axisLock = null;
+
+        if (savedAxis === 'v') {
           e.preventDefault();
-          totalSwipeCount += 1;
-          const milestoneMessage = milestoneMessages.get(totalSwipeCount);
-          if (milestoneMessage && !shownMilestones.has(totalSwipeCount)) {
-            shownMilestones.add(totalSwipeCount);
-            openLikeOverlay(milestoneMessage);
-            return;
+          if (Math.abs(dy) >= SWIPE_THRESHOLD && Math.abs(dy) > Math.abs(dx)) {
+            const sign = dy > 0 ? 1 : -1;
+            const extra = Math.max(120, Math.min(Math.abs(dy) * 0.35, 420));
+            swipeTrack.style.transition = 'transform 0.24s ease-in';
+            swipeTrack.style.transform = `translateY(${dy + sign * extra}px)`;
+            let swipeCommitted = false;
+            function finishSwipeCommit() {
+              if (swipeCommitted) return;
+              swipeCommitted = true;
+              window.clearTimeout(swipeCommitFallback);
+              swipeTrack.removeEventListener('transitionend', swipeOutDone);
+              commitSwipeNavigation();
+            }
+            function swipeOutDone(ev) {
+              if (ev.propertyName !== 'transform') return;
+              finishSwipeCommit();
+            }
+            const swipeCommitFallback = window.setTimeout(finishSwipeCommit, 420);
+            swipeTrack.addEventListener('transitionend', swipeOutDone);
+          } else {
+            snapSwipeTrackBack();
           }
-          showQuote(getRandomQuote());
+        } else {
+          swipeTrack.style.transition = 'none';
+          swipeTrack.style.transform = 'translateY(0)';
         }
+      }
+
+      function onTouchCancel() {
+        if (touchTrackId === null) return;
+        touchTrackId = null;
+        axisLock = null;
+        snapSwipeTrackBack();
       }
 
       container.addEventListener('touchstart', onTouchStart, { passive: true });
       container.addEventListener('touchmove', onTouchMove, { passive: false });
       container.addEventListener('touchend', onTouchEnd, { passive: false });
+      container.addEventListener('touchcancel', onTouchCancel, { passive: true });
 
-      // オーバーレイ操作
-      likeYesBtn.addEventListener('click', () => closeLikeOverlay());
-      likeOkBtn.addEventListener('click', () => closeLikeOverlay());
-      likeCloseBtn.addEventListener('click', () => closeLikeOverlay());
       likeOverlay.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
     });
   </script>
