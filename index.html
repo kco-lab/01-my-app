@@ -368,6 +368,221 @@
         filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 24px rgba(255, 255, 200, 0.5));
       }
     }
+
+    /* ─── 謎の生き物ミニゲーム ─── */
+    .creature-battle {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      touch-action: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .creature-battle.is-open {
+      display: flex;
+    }
+    .creature-battle__dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 8, 22, 0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .creature-battle__fx {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .creature-fx-boom {
+      position: absolute;
+      font-size: clamp(36px, 12vw, 56px);
+      line-height: 1;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0.3);
+      opacity: 1;
+      animation: fxBoomPop 0.45s ease-out forwards;
+      text-shadow: 0 0 12px rgba(255, 200, 80, 0.9);
+    }
+    @keyframes fxBoomPop {
+      0% { transform: translate(-50%, -50%) scale(0.2) rotate(-8deg); opacity: 1; }
+      55% { transform: translate(-50%, -50%) scale(1.15) rotate(4deg); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(0.85) rotate(0deg); opacity: 0; }
+    }
+    .creature-battle__hud {
+      position: absolute;
+      top: max(16px, env(safe-area-inset-top));
+      left: 0;
+      right: 0;
+      z-index: 3;
+      text-align: center;
+      pointer-events: none;
+    }
+    .creature-hpbar {
+      width: min(240px, 70vw);
+      height: 10px;
+      margin: 0 auto 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    .creature-hpbar__fill {
+      height: 100%;
+      width: 100%;
+      transform-origin: left center;
+      background: linear-gradient(90deg, #ff6b9d, #c9f);
+      border-radius: 999px;
+      transition: transform 0.08s ease-out;
+    }
+    .creature-battle.is-legend .creature-hpbar__fill {
+      background: linear-gradient(90deg, #ffd700, #ff8c00, #ff6b9d);
+    }
+    .creature-combo {
+      font-size: clamp(18px, 5vw, 24px);
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 0 #000, 0 0 20px rgba(255, 100, 50, 0.8);
+      min-height: 1.4em;
+      letter-spacing: 0.02em;
+    }
+    .creature-tag {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.15em;
+    }
+    .creature-battle.is-legend .creature-tag {
+      color: #ffe066;
+      text-shadow: 0 0 12px rgba(255, 200, 0, 0.7);
+    }
+    .creature-host {
+      position: absolute;
+      z-index: 1;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      animation: creatureFloat 2.8s ease-in-out infinite;
+    }
+    .creature-host.is-hurt .creature-svg {
+      animation: creatureSvgFlash 0.16s ease-out;
+    }
+    @keyframes creatureFloat {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
+      50% { transform: translate(-50%, calc(-50% - 10px)) rotate(2deg); }
+    }
+    @keyframes creatureSvgFlash {
+      0%, 100% { filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35)); transform: scale(1); }
+      45% { filter: drop-shadow(0 0 28px rgba(255, 60, 80, 0.95)); transform: scale(0.9) rotate(-4deg); }
+    }
+    .creature-battle.is-legend .creature-host.is-hurt .creature-svg {
+      animation: creatureSvgFlashLegend 0.16s ease-out;
+    }
+    @keyframes creatureSvgFlashLegend {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.55)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4)); transform: scale(1); }
+      45% { filter: drop-shadow(0 0 36px rgba(255, 100, 120, 1)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4)); transform: scale(0.9) rotate(-4deg); }
+    }
+    .creature-svg {
+      width: min(200px, 48vw);
+      height: auto;
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
+      transition: filter 0.12s ease;
+    }
+    .creature-battle.is-legend .creature-svg {
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.55)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+    }
+    .creature-battle__result {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .creature-battle__result.is-on {
+      display: flex;
+      pointer-events: auto;
+    }
+    .creature-defeat {
+      font-size: clamp(36px, 11vw, 56px);
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 40px #ff3366, 0 4px 0 #900, 0 0 80px #f06;
+      transform: scale(0);
+      opacity: 0;
+    }
+    .creature-battle__result.show-defeat .creature-defeat {
+      animation: defeatBurst 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes defeatBurst {
+      0% { transform: scale(0) rotate(-12deg); opacity: 0; }
+      70% { transform: scale(1.12) rotate(4deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .creature-first-badge {
+      margin-top: 16px;
+      font-size: clamp(22px, 6vw, 30px);
+      font-weight: 900;
+      color: #ffd700;
+      text-shadow: 0 0 24px rgba(255, 200, 0, 0.9), 0 2px 0 #a60;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .creature-battle__result.show-first .creature-first-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .creature-why {
+      margin-top: 20px;
+      font-size: clamp(17px, 4.5vw, 22px);
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.92);
+      line-height: 1.5;
+      max-width: 280px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
+    }
+    .creature-battle__result.show-why .creature-why {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .creature-dismiss {
+      margin-top: 28px;
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(180deg, #fff, #eee);
+      color: #333;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .creature-battle__result.show-dismiss .creature-dismiss {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .creature-battle.is-defeat-pulse .creature-battle__dim {
+      animation: dimPulse 0.5s ease-out 2;
+    }
+    @keyframes dimPulse {
+      0%, 100% { background: rgba(15, 8, 22, 0.72); }
+      50% { background: rgba(80, 20, 60, 0.85); }
+    }
   </style>
 </head>
 <body>
@@ -388,6 +603,23 @@
         <button class="like-btn" id="likeOkBtn" type="button">まあまあ</button>
         <button class="like-btn" id="likeCloseBtn" type="button">つづける</button>
       </div>
+    </div>
+  </div>
+
+  <div class="creature-battle" id="creatureBattle" aria-hidden="true">
+    <div class="creature-battle__dim"></div>
+    <div class="creature-battle__fx" id="creatureFxLayer"></div>
+    <div class="creature-battle__hud">
+      <div class="creature-hpbar"><div class="creature-hpbar__fill" id="creatureHpFill"></div></div>
+      <div class="creature-combo" id="creatureCombo"></div>
+      <div class="creature-tag" id="creatureTag">？？？な生き物</div>
+    </div>
+    <div class="creature-host" id="creatureHost" role="button" tabindex="0" aria-label="謎の生き物をタップ"></div>
+    <div class="creature-battle__result" id="creatureResult">
+      <div class="creature-defeat" id="creatureDefeatTxt">撃破！</div>
+      <div class="creature-first-badge" id="creatureFirstBadge" hidden>初撃破</div>
+      <p class="creature-why" id="creatureWhy">なぜ戦った？</p>
+      <button type="button" class="creature-dismiss" id="creatureDismiss">…わからん</button>
     </div>
   </div>
 
@@ -1650,6 +1882,200 @@
       ]);
       const shownMilestones = new Set();
 
+      const CREATURE_STORAGE_FIRST = 'everydayQuote_creatureFirstDefeat';
+      const creatureBattleEl = document.getElementById('creatureBattle');
+      const creatureFxLayer = document.getElementById('creatureFxLayer');
+      const creatureHpFill = document.getElementById('creatureHpFill');
+      const creatureComboEl = document.getElementById('creatureCombo');
+      const creatureTagEl = document.getElementById('creatureTag');
+      const creatureHost = document.getElementById('creatureHost');
+      const creatureResult = document.getElementById('creatureResult');
+      const creatureFirstBadge = document.getElementById('creatureFirstBadge');
+      const creatureDismiss = document.getElementById('creatureDismiss');
+
+      let creatureBattleOpen = false;
+      let creatureHp = 0;
+      let creatureHpMax = 1;
+      let creatureCombo = 0;
+      let creatureComboTimer = null;
+      let creatureDefeated = false;
+      const COMBO_MS = 720;
+
+      function isBlockingOverlay() {
+        return overlayOpen || creatureBattleOpen;
+      }
+
+      function tryCreatureEncounter() {
+        const r = Math.random();
+        if (r < 0.0035) return 'legend';
+        if (r < 0.028) return 'normal';
+        return null;
+      }
+
+      function buildCreatureSVG(isLegendary, seed) {
+        let state = (seed >>> 0) || 1;
+        function rnd() {
+          state = (Math.imul(1664525, state) + 1013904223) >>> 0;
+          return state / 4294967296;
+        }
+        const hue1 = Math.floor(rnd() * 360);
+        const hue2 = (hue1 + 40 + Math.floor(rnd() * 80)) % 360;
+        const blobPath = isLegendary
+          ? 'M50 8C78 8 95 32 92 58c-4 38-28 62-52 58C12 118-8 88 12 52 18 38 32 8 50 8z'
+          : 'M50 12C72 4 96 28 88 54 82 78 58 98 38 94 12 88-4 58 18 32 28 18 38 12 50 12z';
+        const eyeCount = 2 + Math.floor(rnd() * 4);
+        const legs = Math.floor(rnd() * 5) + 3;
+        let eyes = '';
+        for (let i = 0; i < eyeCount; i++) {
+          const ex = 28 + rnd() * 44;
+          const ey = 32 + rnd() * 28;
+          const er = 4 + rnd() * 5;
+          eyes += `<ellipse cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" rx="${er.toFixed(1)}" ry="${(er * 0.85).toFixed(1)}" fill="#fff"/><circle cx="${(ex + er * 0.15).toFixed(1)}" cy="${(ey).toFixed(1)}" r="${(er * 0.35).toFixed(1)}" fill="#1a1a2e"/>`;
+        }
+        let tentacles = '';
+        for (let i = 0; i < legs; i++) {
+          const x0 = 20 + (i / (legs - 1 || 1)) * 60;
+          const sway = (rnd() - 0.5) * 16;
+          tentacles += `<path d="M${x0.toFixed(0)} 78 Q${(x0 + sway).toFixed(0)} 95 ${(x0 + sway * 1.4).toFixed(0)} 108" fill="none" stroke="hsla(${hue2},55%,38%,0.85)" stroke-width="3" stroke-linecap="round"/>`;
+        }
+        const strokeLeg = isLegendary ? 'gold' : `hsl(${hue2},50%,35%)`;
+        return `<svg class="creature-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="${blobPath}" fill="hsl(${hue1},${isLegendary ? 72 : 58}%,${isLegendary ? 58 : 52}%)" stroke="${strokeLeg}" stroke-width="${isLegendary ? 3.2 : 2}"/>
+          ${tentacles}
+          ${eyes}
+          ${isLegendary ? '<text x="50" y="22" text-anchor="middle" font-size="10" font-weight="bold" fill="#5c4a00">伝説のけこ</text>' : ''}
+        </svg>`;
+      }
+
+      function placeCreatureHost() {
+        const useCenter = Math.random() < 0.45;
+        if (useCenter) {
+          creatureHost.style.top = `${42 + Math.random() * 16}%`;
+          creatureHost.style.left = `${50 + (Math.random() - 0.5) * 28}%`;
+        } else {
+          creatureHost.style.top = `${24 + Math.random() * 42}%`;
+          creatureHost.style.left = `${18 + Math.random() * 64}%`;
+        }
+      }
+
+      function spawnBoom(clientX, clientY) {
+        const el = document.createElement('div');
+        el.className = 'creature-fx-boom';
+        el.textContent = '💥';
+        const rect = creatureBattleEl.getBoundingClientRect();
+        el.style.left = `${clientX - rect.left}px`;
+        el.style.top = `${clientY - rect.top}px`;
+        creatureFxLayer.appendChild(el);
+        window.setTimeout(() => el.remove(), 480);
+      }
+
+      function resetCreatureComboTimer() {
+        if (creatureComboTimer) window.clearTimeout(creatureComboTimer);
+        creatureComboTimer = window.setTimeout(() => {
+          creatureCombo = 0;
+          creatureComboEl.textContent = '';
+          creatureComboTimer = null;
+        }, COMBO_MS);
+      }
+
+      function updateCreatureHpBar() {
+        const ratio = Math.max(0, creatureHp / creatureHpMax);
+        creatureHpFill.style.transform = `scaleX(${ratio})`;
+      }
+
+      function pulseCreatureHurt() {
+        creatureHost.classList.remove('is-hurt');
+        void creatureHost.offsetWidth;
+        creatureHost.classList.add('is-hurt');
+        window.setTimeout(() => creatureHost.classList.remove('is-hurt'), 160);
+      }
+
+      function runCreatureDefeatSequence() {
+        creatureBattleEl.classList.add('is-defeat-pulse');
+        creatureHost.style.visibility = 'hidden';
+        creatureResult.classList.remove('show-first', 'show-why', 'show-dismiss');
+        creatureResult.classList.add('is-on', 'show-defeat');
+        const firstEver = !localStorage.getItem(CREATURE_STORAGE_FIRST);
+        creatureFirstBadge.hidden = !firstEver;
+        if (firstEver) localStorage.setItem(CREATURE_STORAGE_FIRST, '1');
+        window.setTimeout(() => {
+          if (firstEver) creatureResult.classList.add('show-first');
+        }, 520);
+        window.setTimeout(() => {
+          creatureResult.classList.add('show-why');
+        }, firstEver ? 980 : 640);
+        window.setTimeout(() => {
+          creatureResult.classList.add('show-dismiss');
+        }, firstEver ? 1450 : 1050);
+        window.setTimeout(() => {
+          creatureBattleEl.classList.remove('is-defeat-pulse');
+        }, 1100);
+      }
+
+      function closeCreatureBattleAndResume() {
+        creatureBattleOpen = false;
+        creatureBattleEl.classList.remove('is-open', 'is-legend', 'is-defeat-pulse');
+        creatureBattleEl.setAttribute('aria-hidden', 'true');
+        creatureResult.classList.remove('is-on', 'show-defeat', 'show-first', 'show-why', 'show-dismiss');
+        creatureHost.style.visibility = '';
+        creatureHost.innerHTML = '';
+        creatureFxLayer.innerHTML = '';
+        creatureComboEl.textContent = '';
+        creatureCombo = 0;
+        if (creatureComboTimer) window.clearTimeout(creatureComboTimer);
+        creatureComboTimer = null;
+        showQuote(getRandomQuote());
+      }
+
+      function onCreatureHit(clientX, clientY) {
+        if (!creatureBattleOpen || creatureDefeated || creatureHp <= 0) return;
+        spawnBoom(clientX, clientY);
+        pulseCreatureHurt();
+        creatureCombo += 1;
+        resetCreatureComboTimer();
+        const dmg = Math.random() < 0.22 ? 2 : 1;
+        creatureHp -= dmg;
+        updateCreatureHpBar();
+        creatureComboEl.textContent = creatureCombo >= 2 ? `${creatureCombo} HIT!!🔥` : '';
+        if (creatureHp <= 0) {
+          creatureHp = 0;
+          creatureDefeated = true;
+          if (creatureComboTimer) window.clearTimeout(creatureComboTimer);
+          creatureComboTimer = null;
+          runCreatureDefeatSequence();
+        }
+      }
+
+      function openCreatureBattle(isLegendary) {
+        creatureBattleOpen = true;
+        creatureDefeated = false;
+        const seed = Date.now() % 100000 + (isLegendary ? 7777 : 0);
+        creatureHpMax = isLegendary ? 42 + Math.floor(Math.random() * 14) : 16 + Math.floor(Math.random() * 12);
+        creatureHp = creatureHpMax;
+        creatureCombo = 0;
+        creatureComboEl.textContent = '';
+        creatureHost.innerHTML = buildCreatureSVG(isLegendary, seed);
+        placeCreatureHost();
+        creatureBattleEl.classList.toggle('is-legend', isLegendary);
+        creatureTagEl.textContent = isLegendary ? '伝説のけこ生物（謎）' : '？？？な生き物';
+        updateCreatureHpBar();
+        creatureBattleEl.classList.add('is-open');
+        creatureBattleEl.setAttribute('aria-hidden', 'false');
+      }
+
+      creatureHost.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onCreatureHit(e.clientX, e.clientY);
+      });
+      creatureHost.addEventListener('touchstart', (e) => {
+        if (!creatureBattleOpen || creatureHp <= 0) return;
+        e.preventDefault();
+        const t = e.touches[0];
+        if (t) onCreatureHit(t.clientX, t.clientY);
+      }, { passive: false });
+
+      creatureDismiss.addEventListener('click', () => closeCreatureBattleAndResume());
+
       function clearLikePick() {
         likeYesBtn.classList.remove('picked-yes');
         likeOkBtn.classList.remove('picked-ok');
@@ -1705,11 +2131,16 @@
           openLikeOverlay(milestoneMessage);
           return;
         }
+        const encounter = tryCreatureEncounter();
+        if (encounter) {
+          openCreatureBattle(encounter === 'legend');
+          return;
+        }
         showQuote(getRandomQuote());
       }
 
       function onTouchStart(e) {
-        if (overlayOpen) return;
+        if (isBlockingOverlay()) return;
         if (e.touches.length !== 1) return;
         const t = e.touches[0];
         touchTrackId = t.identifier;
@@ -1720,7 +2151,7 @@
       }
 
       function onTouchMove(e) {
-        if (overlayOpen || touchTrackId === null) return;
+        if (isBlockingOverlay() || touchTrackId === null) return;
         let t = null;
         for (let i = 0; i < e.touches.length; i++) {
           if (e.touches[i].identifier === touchTrackId) {
@@ -1741,7 +2172,7 @@
       }
 
       function onTouchEnd(e) {
-        if (overlayOpen) return;
+        if (isBlockingOverlay()) return;
         let t = null;
         for (let i = 0; i < e.changedTouches.length; i++) {
           if (e.changedTouches[i].identifier === touchTrackId) {
@@ -1805,7 +2236,7 @@
       container.addEventListener('touchcancel', onTouchCancel, { passive: true });
 
       container.addEventListener('click', () => {
-        if (overlayOpen) return;
+        if (isBlockingOverlay()) return;
         commitSwipeNavigation();
       });
 
@@ -1819,6 +2250,9 @@
       });
 
       likeOverlay.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+      creatureBattleEl.addEventListener('touchmove', (e) => {
+        if (creatureBattleOpen) e.preventDefault();
+      }, { passive: false });
     });
   </script>
 </body>
