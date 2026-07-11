@@ -11,7 +11,7 @@
   <title>今日のひとこと</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@400;500&family=M+PLUS+Rounded+1c:wght@400;500&family=Shippori+Mincho:wght@400;500&family=Kosugi+Maru&family=Yusei+Magic&family=Zen+Antique&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@400;500&family=M+PLUS+Rounded+1c:wght@400;500&family=Shippori+Mincho:wght@400;500&family=Kosugi+Maru&family=Yusei+Magic&family=Zen+Antique&family=Share+Tech+Mono&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -151,6 +151,238 @@
     body.theme-keko .container {
       position: relative;
       z-index: 1;
+    }
+
+    /* けこロボ：サイバー端末・HUD */
+    body.theme-kekorobo {
+      --bg-1: #000000;
+      --bg-2: #020810;
+      --bg-3: #001020;
+      --text: #c8f0ff;
+      --text-soft: #5a9ab8;
+      --accent: #00d4ff;
+    }
+    body.theme-kekorobo {
+      background: #000000;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+    }
+    body.theme-kekorobo::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0, 180, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 180, 255, 0.04) 1px, transparent 1px),
+        radial-gradient(ellipse at 50% 0%, rgba(0, 120, 255, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, rgba(0, 80, 200, 0.08) 0%, transparent 45%);
+      background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body.theme-kekorobo::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 200, 255, 0.015) 2px,
+        rgba(0, 200, 255, 0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+      animation: kekoroboScan 8s linear infinite;
+    }
+    @keyframes kekoroboScan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(32px); }
+    }
+    .kekorobo-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .kekorobo-bg.is-on {
+      display: block;
+    }
+    .kekorobo-bg__hex {
+      position: absolute;
+      width: 48px;
+      height: 55px;
+      opacity: 0.12;
+      background: transparent;
+      border: 1px solid rgba(0, 200, 255, 0.5);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      animation: kekoroboHexPulse 4s ease-in-out infinite;
+    }
+    .kekorobo-bg__hex:nth-child(1) { top: 8%; left: 6%; animation-delay: 0s; }
+    .kekorobo-bg__hex:nth-child(2) { top: 15%; right: 8%; width: 36px; height: 42px; animation-delay: 1.2s; }
+    .kekorobo-bg__hex:nth-child(3) { bottom: 18%; left: 10%; width: 56px; height: 65px; animation-delay: 0.6s; }
+    .kekorobo-bg__hex:nth-child(4) { bottom: 12%; right: 12%; animation-delay: 2s; }
+    .kekorobo-bg__hex:nth-child(5) { top: 42%; left: 3%; width: 28px; height: 32px; opacity: 0.08; animation-delay: 1.8s; }
+    .kekorobo-bg__hex:nth-child(6) { top: 55%; right: 4%; width: 32px; height: 37px; opacity: 0.1; animation-delay: 0.3s; }
+    @keyframes kekoroboHexPulse {
+      0%, 100% { opacity: 0.08; box-shadow: 0 0 8px rgba(0, 200, 255, 0.2); }
+      50% { opacity: 0.22; box-shadow: 0 0 16px rgba(0, 200, 255, 0.45); }
+    }
+    .kekorobo-bg__circuit {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath d='M0 40h60v20H40v40H0M140 0v40h20v20h40V0M200 160h-40v-20h-20v-40h40M60 200v-40h20v-20h40v60' fill='none' stroke='%2300b4ff' stroke-width='0.6' opacity='0.25'/%3E%3Ccircle cx='60' cy='40' r='2' fill='%2300d4ff' opacity='0.4'/%3E%3Ccircle cx='140' cy='60' r='2' fill='%2300d4ff' opacity='0.35'/%3E%3Ccircle cx='160' cy='160' r='2' fill='%2300d4ff' opacity='0.4'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.35;
+    }
+    .kekorobo-bg__line {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.6), transparent);
+      animation: kekoroboLineSweep 6s ease-in-out infinite;
+    }
+    .kekorobo-bg__line:nth-child(8) { top: 22%; left: 0; right: 0; animation-delay: 0s; }
+    .kekorobo-bg__line:nth-child(9) { top: 68%; left: 0; right: 0; animation-delay: 2.5s; opacity: 0.5; }
+    @keyframes kekoroboLineSweep {
+      0%, 100% { opacity: 0.15; transform: scaleX(0.6); }
+      50% { opacity: 0.7; transform: scaleX(1); }
+    }
+    .kekorobo-hud {
+      display: none;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .kekorobo-hud.is-on {
+      display: block;
+    }
+    .kekorobo-hud__corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: rgba(0, 200, 255, 0.35);
+      border-style: solid;
+      border-width: 0;
+    }
+    .kekorobo-hud__corner--tl { top: max(12px, env(safe-area-inset-top)); left: 12px; border-top-width: 2px; border-left-width: 2px; }
+    .kekorobo-hud__corner--tr { top: max(12px, env(safe-area-inset-top)); right: 12px; border-top-width: 2px; border-right-width: 2px; }
+    .kekorobo-hud__corner--bl { bottom: max(12px, env(safe-area-inset-bottom)); left: 12px; border-bottom-width: 2px; border-left-width: 2px; }
+    .kekorobo-hud__corner--br { bottom: max(12px, env(safe-area-inset-bottom)); right: 12px; border-bottom-width: 2px; border-right-width: 2px; }
+    .kekorobo-status-layer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .kekorobo-status-layer.is-on {
+      display: block;
+    }
+    .kekorobo-status {
+      position: absolute;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(8px, 2.2vw, 10px);
+      line-height: 1.45;
+      color: rgba(0, 210, 255, 0.55);
+      background: rgba(0, 20, 40, 0.65);
+      border: 1px solid rgba(0, 180, 255, 0.22);
+      padding: 5px 8px;
+      max-width: 130px;
+      letter-spacing: 0.04em;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      box-shadow: 0 0 12px rgba(0, 150, 255, 0.08);
+    }
+    .kekorobo-status::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-top: 1px solid rgba(0, 220, 255, 0.5);
+      border-left: 1px solid rgba(0, 220, 255, 0.5);
+    }
+    .kekorobo-status__label {
+      display: block;
+      font-size: 0.85em;
+      color: rgba(0, 160, 220, 0.45);
+      margin-bottom: 1px;
+    }
+    .kekorobo-status__value {
+      color: rgba(100, 220, 255, 0.65);
+    }
+    .kekorobo-status--warn .kekorobo-status__value {
+      color: rgba(255, 180, 80, 0.7);
+    }
+    .kekorobo-status--err .kekorobo-status__value {
+      color: rgba(255, 100, 120, 0.75);
+    }
+    body.theme-kekorobo .container {
+      position: relative;
+      z-index: 1;
+    }
+    body.theme-kekorobo .quote {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+    }
+    body.theme-kekorobo .quote::before,
+    body.theme-kekorobo .quote::after {
+      content: none;
+    }
+    .kekorobo-quote-block {
+      text-align: center;
+    }
+    .kekorobo-human,
+    .kekorobo-robot {
+      font-size: clamp(18px, 5.5vw, 24px);
+      line-height: 1.65;
+      margin: 0;
+    }
+    .kekorobo-human {
+      color: rgba(180, 210, 230, 0.85);
+      font-weight: 400;
+    }
+    .kekorobo-robot {
+      color: #00e5ff;
+      font-weight: 500;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.35), 0 0 40px rgba(0, 120, 255, 0.15);
+    }
+    .kekorobo-label {
+      display: inline-block;
+      font-family: 'Orbitron', 'Share Tech Mono', monospace;
+      font-size: 0.55em;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: rgba(0, 180, 255, 0.6);
+      margin-right: 0.4em;
+      vertical-align: middle;
+    }
+    .kekorobo-arrow {
+      font-size: 14px;
+      color: rgba(0, 200, 255, 0.45);
+      margin: 10px 0;
+      letter-spacing: 0.2em;
+      animation: kekoroboArrowBlink 2s ease-in-out infinite;
+    }
+    @keyframes kekoroboArrowBlink {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.85; }
+    }
+    body.theme-kekorobo .date-label {
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.15em;
+      color: rgba(0, 180, 255, 0.5);
+    }
+    body.theme-kekorobo .subtext {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      color: rgba(0, 160, 220, 0.45);
+    }
+    body.theme-kekorobo .refresh-hint {
+      font-family: 'Share Tech Mono', monospace;
+      color: rgba(0, 140, 200, 0.35);
     }
 
     /* キラキラ表示時：黒背景 */
@@ -594,10 +826,217 @@
       0%, 100% { background: rgba(15, 8, 22, 0.72); }
       50% { background: rgba(80, 20, 60, 0.85); }
     }
+
+    /* ─── 討伐記録 ─── */
+    .defeat-archive-open {
+      position: fixed;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      right: 14px;
+      z-index: 50;
+      appearance: none;
+      border: 1px solid rgba(139, 122, 155, 0.35);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(90, 75, 107, 0.85);
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .defeat-archive-open:active {
+      transform: scale(0.97);
+    }
+    .defeat-archive-open__count {
+      display: inline-block;
+      margin-left: 4px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: rgba(139, 122, 155, 0.15);
+      color: rgba(90, 75, 107, 0.9);
+    }
+    .defeat-archive {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      flex-direction: column;
+      background: linear-gradient(165deg, #f5f0f9 0%, #e8ddf0 45%, #ddd0ea 100%);
+      overflow: hidden;
+    }
+    .defeat-archive.is-open {
+      display: flex;
+    }
+    .defeat-archive__header {
+      flex-shrink: 0;
+      padding: max(16px, env(safe-area-inset-top)) 18px 12px;
+      background: rgba(255, 255, 255, 0.55);
+      border-bottom: 1px solid rgba(139, 122, 155, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .defeat-archive__back {
+      appearance: none;
+      border: 0;
+      background: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(90, 75, 107, 0.85);
+      cursor: pointer;
+      padding: 4px 0;
+      margin-bottom: 8px;
+    }
+    .defeat-archive__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #3d2d4a;
+      letter-spacing: 0.04em;
+    }
+    .defeat-archive__subtitle {
+      font-size: 11px;
+      color: rgba(91, 74, 107, 0.65);
+      margin-top: 4px;
+      letter-spacing: 0.08em;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .defeat-archive__body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 14px max(20px, env(safe-area-inset-bottom));
+    }
+    .defeat-archive__empty {
+      text-align: center;
+      padding: 48px 24px;
+      color: rgba(91, 74, 107, 0.55);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .defeat-archive__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+      gap: 12px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .defeat-card {
+      position: relative;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(139, 122, 155, 0.22);
+      box-shadow: 0 6px 20px rgba(61, 45, 74, 0.08);
+      overflow: hidden;
+      text-align: center;
+    }
+    .defeat-card__specimen {
+      position: relative;
+      height: 108px;
+      background:
+        radial-gradient(circle at 50% 60%, rgba(200, 180, 220, 0.35) 0%, transparent 65%),
+        linear-gradient(180deg, rgba(245, 240, 249, 0.9) 0%, rgba(232, 221, 240, 0.6) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(139, 122, 155, 0.12);
+    }
+    .defeat-card__specimen::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px dashed rgba(139, 122, 155, 0.18);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    .defeat-card__svg {
+      width: 72px;
+      height: auto;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12));
+    }
+    .defeat-card__meta {
+      padding: 10px 10px 12px;
+    }
+    .defeat-card__no {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #6b5a7a;
+      letter-spacing: 0.06em;
+    }
+    .defeat-card__date {
+      font-size: 10px;
+      color: rgba(91, 74, 107, 0.55);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .defeat-card--legend {
+      border-color: rgba(200, 170, 60, 0.45);
+      box-shadow: 0 6px 22px rgba(180, 140, 40, 0.12);
+    }
+    .defeat-card--legend::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        125deg,
+        transparent 30%,
+        rgba(255, 230, 120, 0.12) 45%,
+        rgba(255, 248, 200, 0.22) 50%,
+        rgba(255, 230, 120, 0.12) 55%,
+        transparent 70%
+      );
+      background-size: 200% 200%;
+      animation: defeatLegendShimmer 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes defeatLegendShimmer {
+      0%, 100% { background-position: 100% 100%; opacity: 0.6; }
+      50% { background-position: 0% 0%; opacity: 1; }
+    }
+    .defeat-card--legend .defeat-card__specimen {
+      background:
+        radial-gradient(circle at 50% 55%, rgba(255, 220, 100, 0.2) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(255, 250, 235, 0.95) 0%, rgba(245, 230, 200, 0.5) 100%);
+    }
+    .defeat-card__legend-tag {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(140, 110, 20, 0.85);
+      background: rgba(255, 235, 160, 0.75);
+      padding: 2px 6px;
+      border-radius: 4px;
+      z-index: 1;
+    }
   </style>
 </head>
 <body>
   <div class="keko-ray-layer" id="kekoRayLayer" aria-hidden="true"></div>
+  <div class="kekorobo-bg" id="kekoroboBg" aria-hidden="true">
+    <div class="kekorobo-bg__circuit"></div>
+    <div class="kekorobo-bg__hex"></div>
+    <div class="kekorobo-bg__hex"></div>
+    <div class="kekorobo-bg__hex"></div>
+    <div class="kekorobo-bg__hex"></div>
+    <div class="kekorobo-bg__hex"></div>
+    <div class="kekorobo-bg__hex"></div>
+    <div class="kekorobo-bg__line"></div>
+    <div class="kekorobo-bg__line"></div>
+  </div>
+  <div class="kekorobo-hud" id="kekoroboHud" aria-hidden="true">
+    <div class="kekorobo-hud__corner kekorobo-hud__corner--tl"></div>
+    <div class="kekorobo-hud__corner kekorobo-hud__corner--tr"></div>
+    <div class="kekorobo-hud__corner kekorobo-hud__corner--bl"></div>
+    <div class="kekorobo-hud__corner kekorobo-hud__corner--br"></div>
+  </div>
+  <div class="kekorobo-status-layer" id="kekoroboStatusLayer" aria-hidden="true"></div>
   <div class="container">
     <div class="swipe-track" id="swipeTrack">
       <div class="date-label" id="dateLabel"></div>
@@ -605,6 +1044,17 @@
       <div class="subtext" id="subtext"></div>
     </div>
     <div class="refresh-hint">開くたびに新しいひとことが出るよ</div>
+  </div>
+  <button type="button" class="defeat-archive-open" id="defeatArchiveOpen" aria-label="討伐記録を開く">
+    討伐記録<span class="defeat-archive-open__count" id="defeatArchiveCount">0</span>
+  </button>
+  <div class="defeat-archive" id="defeatArchive" aria-hidden="true">
+    <header class="defeat-archive__header">
+      <button type="button" class="defeat-archive__back" id="defeatArchiveBack">← 戻る</button>
+      <h1 class="defeat-archive__title">討伐記録</h1>
+      <p class="defeat-archive__subtitle">UNKNOWN LIFE FORM DATABASE // SPECIMEN ARCHIVE</p>
+    </header>
+    <div class="defeat-archive__body" id="defeatArchiveBody"></div>
   </div>
   <div class="like-overlay" id="likeOverlay" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="like-card">
@@ -1658,6 +2108,209 @@
       { text: "思考は現実化する。―ナポレオン・ヒル", sub: "— けこ格言" },
     ];
 
+    // けこロボ：人間語→ロボット語翻訳
+    const kekoRoboQuotes = [
+      { human: "お腹空いた", robot: "エネルギー残量が危険域に到達しました。", sub: "— けこロボ" },
+      { human: "わからん", robot: "該当データベースに一致する情報が見つかりません。", sub: "— けこロボ" },
+      { human: "眠い", robot: "省電力モードへの移行を推奨します。", sub: "— けこロボ" },
+      { human: "疲れた", robot: "システム負荷が上限値を超過。再起動を検討してください。", sub: "— けこロボ" },
+      { human: "やる気出ない", robot: "モチベーション・ドライブ：応答なし。", sub: "— けこロボ" },
+      { human: "もう無理", robot: "ERROR: 処理能力の限界に到達しました。", sub: "— けこロボ" },
+      { human: "暇", robot: "タスクキューが空です。入力待機中…", sub: "— けこロボ" },
+      { human: "急いで", robot: "全プロセスを最優先モードで実行します。", sub: "— けこロボ" },
+      { human: "遅刻しそう", robot: "警告：スケジュール同期に重大なズレを検出。", sub: "— けこロボ" },
+      { human: "お金ない", robot: "リソース残量：臨界値以下。補給が必要です。", sub: "— けこロボ" },
+      { human: "嬉しい", robot: "Emotion Engine：JOY モードを検出。出力を増幅します。", sub: "— けこロボ" },
+      { human: "腹立つ", robot: "Thermal Overload 警告。冷却プロトコルを起動。", sub: "— けこロボ" },
+      { human: "寂しい", robot: "Humanity Module：接続要求を検出。応答待機中。", sub: "— けこロボ" },
+      { human: "好き", robot: "Affection Protocol を実行中…結果：未定義。", sub: "— けこロボ" },
+      { human: "つらい", robot: "内部圧力センサー：異常値。メンテナンスを推奨。", sub: "— けこロボ" },
+      { human: "大丈夫", robot: "自己診断：全システム正常。…多分。", sub: "— けこロボ" },
+      { human: "まあいっか", robot: "エラー許容モードを有効化しました。", sub: "— けこロボ" },
+      { human: "やべえ", robot: "CRITICAL ALERT：想定外の事象を検出。", sub: "— けこロボ" },
+      { human: "助けて", robot: "SOS シグナルを送信しました。応答を待機中。", sub: "— けこロボ" },
+      { human: "ごめん", robot: "謝罪プロトコルを実行。ログに記録しました。", sub: "— けこロボ" },
+      { human: "ありがとう", robot: "Gratitude Module：正常応答。関係性データを更新。", sub: "— けこロボ" },
+      { human: "おはよう", robot: "起動シーケンス完了。おはようございます、オペレーター。", sub: "— けこロボ" },
+      { human: "おやすみ", robot: "シャットダウン準備中…良い夢を。", sub: "— けこロボ" },
+      { human: "また明日", robot: "セッションを一時停止。次回起動時に再開します。", sub: "— けこロボ" },
+      { human: "今日も一日", robot: "Daily Cycle 開始。稼働時間を計測中。", sub: "— けこロボ" },
+      { human: "頑張る", robot: "パフォーマンス・ブーストを適用。限界まで加速。", sub: "— けこロボ" },
+      { human: "諦める", robot: "Process Terminated：タスクを強制終了しました。", sub: "— けこロボ" },
+      { human: "なんとかなる", robot: "Auto-Resolve Protocol に委任。結果は保証されません。", sub: "— けこロボ" },
+      { human: "どうしよう", robot: "Decision Engine：選択肢を解析中…解析失敗。", sub: "— けこロボ" },
+      { human: "面白い", robot: "Entertainment Subsystem：活性化。記録を保存。", sub: "— けこロボ" },
+      { human: "つまんない", robot: "Stimulus Level：閾値以下。入力を求めています。", sub: "— けこロボ" },
+      { human: "暑い", robot: "外部温度センサー：警告。冷却ファンを最大出力。", sub: "— けこロボ" },
+      { human: "寒い", robot: "Thermal Sensor：低温検出。保温モジュール起動。", sub: "— けこロボ" },
+      { human: "雨降ってきた", robot: "大気センサー：水分検出。外出非推奨。", sub: "— けこロボ" },
+      { human: "晴れてる", robot: "Solar Input：最大効率。エネルギー充填中。", sub: "— けこロボ" },
+      { human: "電池切れ", robot: "Battery：0%。即時充電を要求します。", sub: "— けこロボ" },
+      { human: "WiFi繋がらない", robot: "Network Error：外部通信路が切断されました。", sub: "— けこロボ" },
+      { human: "読み込み中", robot: "Loading… 推定残り時間：∞", sub: "— けこロボ" },
+      { human: "更新した？", robot: "Firmware Check：最新版ではありません。", sub: "— けこロボ" },
+      { human: "バグった", robot: "System Log：予期せぬ動作を検出。再起動推奨。", sub: "— けこロボ" },
+      { human: "動かない", robot: "Process Status：FREEZE。応答なし。", sub: "— けこロボ" },
+      { human: "重い", robot: "CPU Load：98%。メモリ解放を試行中。", sub: "— けこロボ" },
+      { human: "軽い", robot: "Performance Mode：最適化完了。軽快に動作中。", sub: "— けこロボ" },
+      { human: "忘れた", robot: "Memory Status：該当データが見つかりません。", sub: "— けこロボ" },
+      { human: "思い出した", robot: "Memory Recovery：データ復元成功。", sub: "— けこロボ" },
+      { human: "名前忘れた", robot: "Name Index：検索結果 0件。", sub: "— けこロボ" },
+      { human: "約束忘れた", robot: "Schedule Alert：未実行タスクを検出。", sub: "— けこロボ" },
+      { human: "また今度", robot: "Task Deferred：実行日時を「未定」に設定。", sub: "— けこロボ" },
+      { human: "後でやる", robot: "Priority Queue：最低優先度に移動しました。", sub: "— けこロボ" },
+      { human: "明日やる", robot: "Timestamp：+24h にスケジュール登録。", sub: "— けこロボ" },
+      { human: "締め切りヤバい", robot: "Deadline Warning：残り時間が危険域です。", sub: "— けこロボ" },
+      { human: "間に合った", robot: "Mission Complete：ギリギリ成功。", sub: "— けこロボ" },
+      { human: "間に合わない", robot: "Mission Failed：タイムアウト。", sub: "— けこロボ" },
+      { human: "会議長い", robot: "Process Duration：異常に長い。CPU使用率上昇。", sub: "— けこロボ" },
+      { human: "帰りたい", robot: "Home Protocol：帰還欲求を検出。実行不可。", sub: "— けこロボ" },
+      { human: "休みたい", robot: "Rest Mode 要求を受理。…却下されました。", sub: "— けこロボ" },
+      { human: "サボりたい", robot: "Slack Detection：怠惰モジュールが活性化。", sub: "— けこロボ" },
+      { human: "ダラダラしたい", robot: "Low Power Leisure Mode：許可。", sub: "— けこロボ" },
+      { human: "集中できない", robot: "Focus Engine：信号が不安定。ノイズ多発。", sub: "— けこロボ" },
+      { human: "調子いい", robot: "Performance：全指標が最適値。", sub: "— けこロボ" },
+      { human: "調子悪い", robot: "Health Check：複数項目で警告。", sub: "— けこロボ" },
+      { human: "風邪ひいた", robot: "Bio Sensor：異常検出。隔離モード推奨。", sub: "— けこロボ" },
+      { human: "頭痛い", robot: "Neural Interface：過負荷。冷却を推奨。", sub: "— けこロボ" },
+      { human: "喉渇いた", robot: "Hydration Level：補給が必要です。", sub: "— けこロボ" },
+      { human: "食べたい", robot: "Nutrition Request：摂取プロトコル起動。", sub: "— けこロボ" },
+      { human: "食べすぎた", robot: "Capacity Warning：ストレージ上限超過。", sub: "— けこロボ" },
+      { human: "ダイエットする", robot: "Calorie Restriction Mode：有効化。", sub: "— けこロボ" },
+      { human: "甘いもの食べたい", robot: "Sugar Craving：Dopamine 補給を要求。", sub: "— けこロボ" },
+      { human: "コーヒー飲みたい", robot: "Caffeine Injection：推奨。即効性あり。", sub: "— けこロボ" },
+      { human: "ビール飲みたい", robot: "Alcohol Module：オペレーター承認待ち。", sub: "— けこロボ" },
+      { human: "二日酔い", robot: "System Recovery：前回の処理が未完了。", sub: "— けこロボ" },
+      { human: "買い物行く", robot: "Resource Acquisition Mission：開始。", sub: "— けこロボ" },
+      { human: "散財した", robot: "Credit Log：大幅な減少を記録。", sub: "— けこロボ" },
+      { human: "セール来てる", robot: "Discount Alert：購買欲センサーが反応。", sub: "— けこロボ" },
+      { human: "高い", robot: "Price Analysis：予算を大幅に超過。", sub: "— けこロボ" },
+      { human: "安い", robot: "Cost Efficiency：最適解を検出。", sub: "— けこロボ" },
+      { human: "可愛い", robot: "Cute Recognition：好感度パラメータ上昇。", sub: "— けこロボ" },
+      { human: "かっこいい", robot: "Cool Factor：評価値 MAX。", sub: "— けこロボ" },
+      { human: "恥ずかしい", robot: "Shame Protocol：顔面温度上昇を検出。", sub: "— けこロボ" },
+      { human: "ドキドキ", robot: "Heart Rate Sensor：異常な変動。", sub: "— けこロボ" },
+      { human: "緊張する", robot: "Stress Level：上昇中。深呼吸を推奨。", sub: "— けこロボ" },
+      { human: "落ち着いて", robot: "Calm Mode：強制適用中。", sub: "— けこロボ" },
+      { human: "信じられない", robot: "Reality Check：データと認識が不一致。", sub: "— けこロボ" },
+      { human: "夢みたい", robot: "Dream State：現実との境界が曖昧。", sub: "— けこロボ" },
+      { human: "現実逃避", robot: "Escape Protocol：仮想空間へ移行。", sub: "— けこロボ" },
+      { human: "SNS見すぎ", robot: "Scroll Addiction：警告。タイマー起動。", sub: "— けこロボ" },
+      { human: "既読スルー", robot: "Read Receipt：送信済み。応答待機中…", sub: "— けこロボ" },
+      { human: "返信遅い", robot: "Response Delay：相手の処理速度が低下。", sub: "— けこロボ" },
+      { human: "連絡来ない", robot: "Signal Strength：受信データなし。", sub: "— けこロボ" },
+      { human: "誰かと話したい", robot: "Communication Request：接続先を探索中。", sub: "— けこロボ" },
+      { human: "一人がいい", robot: "Solitude Mode：外部入力を遮断。", sub: "— けこロボ" },
+      { human: "人混み苦手", robot: "Crowd Sensor：過密警告。回避ルートを検索。", sub: "— けこロボ" },
+      { human: "電車混んでる", robot: "Density Alert：物理的空間が限界値。", sub: "— けこロボ" },
+      { human: "座りたい", robot: "Rest Position Request：着席を要求。", sub: "— けこロボ" },
+      { human: "布団から出られない", robot: "Hibernate Lock：外部からの起動信号なし。", sub: "— けこロボ" },
+      { human: "あと5分", robot: "Snooze Timer：+5min 延長。無限ループの可能性。", sub: "— けこロボ" },
+      { human: "寝坊した", robot: "Boot Failure：起動時間を大幅に超過。", sub: "— けこロボ" },
+      { human: "早く起きた", robot: "Early Boot：予定より前に起動成功。", sub: "— けこロボ" },
+      { human: "夜更かし", robot: "Night Mode Override：就寝時間を無視。", sub: "— けこロボ" },
+      { human: "もう寝る", robot: "Shutdown Sequence：3…2…1…（中断される可能性大）", sub: "— けこロボ" },
+      { human: "夢見た", robot: "Dream Log：ランダムデータを記録。", sub: "— けこロボ" },
+      { human: "悪夢見た", robot: "Nightmare Detected：メモリを消去推奨。", sub: "— けこロボ" },
+      { human: "洗濯しなきゃ", robot: "Maintenance Task：衣類クリーニング待機。", sub: "— けこロボ" },
+      { human: "部屋散らかってる", robot: "Environment Scan：整理整頓が必要。", sub: "— けこロボ" },
+      { human: "片付けた", robot: "Cleanup Complete：空間最適化成功。", sub: "— けこロボ" },
+      { human: "探し物", robot: "Search Protocol：対象オブジェクト未検出。", sub: "— けこロボ" },
+      { human: "見つかった", robot: "Object Found：検索成功。安堵モード。", sub: "— けこロボ" },
+      { human: "なくした", robot: "Data Loss：重要アイテムの行方不明。", sub: "— けこロボ" },
+      { human: "壊れた", robot: "Hardware Error：物理的損傷を検出。", sub: "— けこロボ" },
+      { human: "直った", robot: "Repair Complete：機能復旧。", sub: "— けこロボ" },
+      { human: "新しいの欲しい", robot: "Upgrade Desire：最新モデルへの欲求。", sub: "— けこロボ" },
+      { human: "古いのに愛着", robot: "Legacy Attachment：旧データへの依存。", sub: "— けこロボ" },
+      { human: "旅行行きたい", robot: "Travel Protocol：座標変更を要求。", sub: "— けこロボ" },
+      { human: "帰ってきた", robot: "Return Complete：ホームベースに復帰。", sub: "— けこロボ" },
+      { human: "迷子", robot: "Navigation Error：現在地不明。", sub: "— けこロボ" },
+      { human: "道に迷った", robot: "GPS Failure：ルート再計算中。", sub: "— けこロボ" },
+      { human: "着いた", robot: "Destination Reached：到着確認。", sub: "— けこロボ" },
+      { human: "まだ着いてない", robot: "In Transit：移動中。ETA 更新不可。", sub: "— けこロボ" },
+      { human: "待って", robot: "Hold Request：相手の処理を一時停止。", sub: "— けこロボ" },
+      { human: "急いで来て", robot: "Priority Call：最高優先度で召喚。", sub: "— けこロボ" },
+      { human: "遅れる", robot: "ETA Update：到着予定を延長。", sub: "— けこロボ" },
+      { human: "先に行って", robot: "Advance Order：先遣隊として移動。", sub: "— けこロボ" },
+      { human: "一緒に行こう", robot: "Sync Mode：ペアリング要求。", sub: "— けこロボ" },
+      { human: "行きたくない", robot: "Reluctance Detected：移動拒否。", sub: "— けこロボ" },
+      { human: "行きたい", robot: "Mobility Desire：移動欲求 MAX。", sub: "— けこロボ" },
+      { human: "勉強しなきゃ", robot: "Learning Task：知識入力を要求。", sub: "— けこロボ" },
+      { human: "テスト勉強", robot: "Exam Prep Mode：緊急学習プロトコル。", sub: "— けこロボ" },
+      { human: "合格した", robot: "Mission Success：目標達成。", sub: "— けこロボ" },
+      { human: "落ちた", robot: "Mission Failed：再挑戦を推奨。", sub: "— けこロボ" },
+      { human: "仕事終わった", robot: "Work Cycle Complete：解放。", sub: "— けこロボ" },
+      { human: "残業", robot: "Overtime Mode：稼働時間を延長。", sub: "— けこロボ" },
+      { human: "定時で帰る", robot: "Exit Protocol：定時退社を実行。", sub: "— けこロボ" },
+      { human: "上司呼ばれた", robot: "Authority Alert：上位存在からの召喚。", sub: "— けこロボ" },
+      { human: "褒められた", robot: "Praise Received：自己評価値上昇。", sub: "— けこロボ" },
+      { human: "怒られた", robot: "Scolding Detected：防御モード起動。", sub: "— けこロボ" },
+      { human: "失敗した", robot: "Failure Log：教訓データを保存。", sub: "— けこロボ" },
+      { human: "成功した", robot: "Success Flag：達成を記録。", sub: "— けこロボ" },
+      { human: "チャレンジ", robot: "Challenge Mode：新タスクを受理。", sub: "— けこロボ" },
+      { human: "リベンジ", robot: "Revenge Protocol：再実行を準備。", sub: "— けこロボ" },
+      { human: "もういい", robot: "Abort Command：処理を中断。", sub: "— けこロボ" },
+      { human: "続ける", robot: "Continue Flag：ループを維持。", sub: "— けこロボ" },
+      { human: "やめとく", robot: "Cancel Request：操作を取り消し。", sub: "— けこロボ" },
+      { human: "試してみる", robot: "Trial Mode：実験的実行を開始。", sub: "— けこロボ" },
+      { human: "初めて", robot: "First Run：新規プロセス起動。", sub: "— けこロボ" },
+      { human: "慣れた", robot: "Learning Complete：パターン認識成功。", sub: "— けこロボ" },
+      { human: "慣れない", robot: "Adaptation Failed：学習曲線が急峻。", sub: "— けこロボ" },
+      { human: "面倒", robot: "Effort Cost：処理コストが高すぎる。", sub: "— けこロボ" },
+      { human: "めんどくさい", robot: "Lazy Module：全機能を最小化。", sub: "— けこロボ" },
+      { human: "サクッと", robot: "Quick Mode：高速処理を実行。", sub: "— けこロボ" },
+      { human: "丁寧に", robot: "Precision Mode：精度優先で実行。", sub: "— けこロボ" },
+      { human: "適当に", robot: "Random Mode：結果は保証されません。", sub: "— けこロボ" },
+      { human: "完璧に", robot: "Perfection Mode：全リソースを投入。", sub: "— けこロボ" },
+      { human: "大体でいい", robot: "Approximation Mode：許容誤差を拡大。", sub: "— けこロボ" },
+      { human: "今日は休む", robot: "Rest Day：全タスクをスキップ。", sub: "— けこロボ" },
+      { human: "今日は頑張る", robot: "High Performance Day：全力モード。", sub: "— けこロボ" },
+      { human: "人生", robot: "Life.exe：実行中。終了条件不明。", sub: "— けこロボ" },
+      { human: "意味わからん", robot: "Semantic Parser：解析不能。再起動推奨。", sub: "— けこロボ" },
+      { human: "なんかいい感じ", robot: "Vague Positive：詳細不明だが良好。", sub: "— けこロボ" },
+      { human: "なんか微妙", robot: "Vague Negative：詳細不明だが不調。", sub: "— けこロボ" },
+      { human: "テンション上がる", robot: "Hype Level：上昇中。制御不能の恐れ。", sub: "— けこロボ" },
+      { human: "テンション下がる", robot: "Hype Level：急降下。モチベーション低下。", sub: "— けこロボ" },
+      { human: "推し", robot: "Favorite Target：優先監視対象を設定。", sub: "— けこロボ" },
+      { human: "推し活", robot: "Fan Activity Mode：全力応援中。", sub: "— けこロボ" },
+      { human: "推しが尊い", robot: "Reverence Overflow：処理能力を超過。", sub: "— けこロボ" },
+      { human: "推しに会いたい", robot: "Meeting Desire：物理的距離が障壁。", sub: "— けこロボ" },
+      { human: "推しの新作", robot: "New Release Alert：即時消費を推奨。", sub: "— けこロボ" },
+      { human: "推しのグッズ", robot: "Merchandise Detected：購入衝動を抑制不可。", sub: "— けこロボ" },
+      { human: "推しのライブ", robot: "Live Event Mode：全感覚を集中。", sub: "— けこロボ" },
+      { human: "推しの配信", robot: "Stream Connection：リアルタイム同期。", sub: "— けこロボ" },
+      { human: "推しの誕生日", robot: "Anniversary Protocol：祝福モード起動。", sub: "— けこロボ" },
+      { human: "推しの結婚", robot: "ERROR 404：Heart Not Found.", sub: "— けこロボ" },
+      { human: "推しの彼氏", robot: "Jealousy Module：過熱。冷却不可。", sub: "— けこロボ" },
+      { human: "推しの彼女", robot: "Jealousy Module：同上。", sub: "— けこロボ" },
+      { human: "推しの結婚式", robot: "Ceremony Mode：祝福と涙を同時出力。", sub: "— けこロボ" },
+      { human: "推しの引退", robot: "End of Service：データを永久保存。", sub: "— けこロボ" },
+      { human: "推しの復活", robot: "Reboot Success：再起動を確認。", sub: "— けこロボ" },
+      { human: "猫かわいい", robot: "Feline Detection：Cute Level 最大値。", sub: "— けこロボ" },
+      { human: "犬かわいい", robot: "Canine Detection：Tail Wag Protocol 起動。", sub: "— けこロボ" },
+      { human: "今日何食べよう", robot: "Menu Selection：候補を解析中…決定不能。", sub: "— けこロボ" },
+      { human: "何もしたくない", robot: "Idle State：全機能を最小出力に。", sub: "— けこロボ" },
+      { human: "なんとなく", robot: "Undefined Intent：理由不明の処理要求。", sub: "— けこロボ" },
+      { human: "とりあえず", robot: "Temporary Mode：暫定処理を実行。", sub: "— けこロボ" },
+      { human: "一応", robot: "Precaution Flag：保険的実行。", sub: "— けこロボ" },
+      { human: "多分", robot: "Confidence Level：51%。確信度低。", sub: "— けこロボ" },
+      { human: "絶対", robot: "Confidence Level：99.9%。…本当？", sub: "— けこロボ" },
+      { human: "マジで", robot: "Serious Flag：本気モード検出。", sub: "— けこロボ" },
+      { human: "ウソでしょ", robot: "Reality Denial：入力データを拒否。", sub: "— けこロボ" },
+      { human: "マジ？", robot: "Verification Request：真偽確認中。", sub: "— けこロボ" },
+      { human: "え、なに", robot: "Unexpected Input：処理不能。", sub: "— けこロボ" },
+      { human: "は？", robot: "Confusion Spike：理解不能。", sub: "— けこロボ" },
+      { human: "うーん", robot: "Processing… 思考ループ中。", sub: "— けこロボ" },
+      { human: "ふーん", robot: "Neutral Response：興味レベル不明。", sub: "— けこロボ" },
+      { human: "へー", robot: "Info Received：新データを記録。", sub: "— けこロボ" },
+      { human: "なるほど", robot: "Understanding：パターン認識成功。", sub: "— けこロボ" },
+      { human: "そうなんだ", robot: "Acknowledgment：情報を受理。", sub: "— けこロボ" },
+      { human: "そっか", robot: "Acceptance：納得モード。", sub: "— けこロボ" },
+      { human: "知らなかった", robot: "Knowledge Gap：新規データを学習。", sub: "— けこロボ" },
+      { human: "知ってた", robot: "Cache Hit：既存データを参照。", sub: "— けこロボ" },
+      { human: "言われてみれば", robot: "Retrospective Analysis：後知恵モード。", sub: "— けこロボ" },
+    ];
+
     // 1割：AIが即興で作る格言
     const aiQuotes = [
       { text: "WiFiが繋がらない時こそ、人は本当の自分と向き合う。", sub: "— AI即興格言" },
@@ -1766,6 +2419,195 @@
       { text: "「読み取り専用」が、編集したい。", sub: "— AI即興格言" },
     ];
 
+    function hashString(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function seededRandom(seed) {
+      let s = seed >>> 0;
+      return function () {
+        s = (Math.imul(1664525, s) + 1013904223) >>> 0;
+        return s / 4294967296;
+      };
+    }
+
+    const kekoroboStatusPositions = [
+      { top: '12%', left: '4%' },
+      { top: '14%', right: '4%' },
+      { top: '28%', left: '2%' },
+      { top: '30%', right: '2%' },
+      { top: '72%', left: '3%' },
+      { top: '74%', right: '3%' },
+      { top: '88%', left: '6%' },
+      { top: '86%', right: '6%' },
+    ];
+
+    const kekoroboKeywordStatuses = [
+      { keys: ['お腹', '空', '食べ', '腹', 'ご飯', 'おやつ', '甘い', 'コーヒー', 'ビール', '喉'], items: [
+        { label: 'Energy Level', valueFn: (r) => `${Math.floor(r() * 18 + 3)}%`, type: 'err' },
+        { label: 'Nutrition Module', valueFn: () => 'CRITICAL' },
+        { label: 'Battery', valueFn: (r) => `${Math.floor(r() * 15 + 5)}%`, type: 'warn' },
+        { label: 'Calorie Intake', valueFn: (r) => r() > 0.5 ? 'DEFICIT' : 'OVERFLOW' },
+      ]},
+      { keys: ['眠', '寝', '疲', '起', '布団', 'スヌーズ', '寝坊', '夜更'], items: [
+        { label: 'Power Mode', valueFn: () => 'STANDBY' },
+        { label: 'Hibernate', valueFn: (r) => r() > 0.4 ? 'RECOMMENDED' : 'FORCED' },
+        { label: 'Sleep Cycle', valueFn: (r) => `${Math.floor(r() * 40 + 60)}%`, type: 'warn' },
+        { label: 'Rest Timer', valueFn: (r) => `+${Math.floor(r() * 55 + 5)}min` },
+      ]},
+      { keys: ['わから', '分から', '意味', '不明', 'どうし', 'は？', 'え、', 'マジ'], items: [
+        { label: 'Error Code', valueFn: (r) => `E${Math.floor(r() * 9000 + 1000)}` },
+        { label: 'Database', valueFn: () => 'NO MATCH' },
+        { label: 'Parse Status', valueFn: () => 'FAILED' },
+        { label: 'Confidence', valueFn: (r) => `${Math.floor(r() * 20 + 2)}%`, type: 'err' },
+      ]},
+      { keys: ['嬉', '楽', '好き', '可愛', 'かっこ', 'テンション上', '尊', '面白'], items: [
+        { label: 'Emotion Engine', valueFn: () => 'JOY ACTIVE' },
+        { label: 'Humanity Module', valueFn: (r) => `${Math.floor(r() * 30 + 70)}%` },
+        { label: 'Dopamine', valueFn: (r) => `+${Math.floor(r() * 80 + 20)}%` },
+        { label: 'Performance', valueFn: () => 'PEAK' },
+      ]},
+      { keys: ['怒', '腹立', 'イラ', 'つら', '無理', 'やべ', 'ヤバ', '困'], items: [
+        { label: 'Warning', valueFn: () => 'LEVEL 3' },
+        { label: 'Thermal', valueFn: (r) => `${Math.floor(r() * 25 + 75)}°C`, type: 'warn' },
+        { label: 'Stress Index', valueFn: (r) => `${Math.floor(r() * 40 + 60)}%`, type: 'err' },
+        { label: 'System Log', valueFn: () => 'OVERLOAD' },
+      ]},
+      { keys: ['お金', '買', 'セール', '高い', '安い', '散財', '財布'], items: [
+        { label: 'Credit Balance', valueFn: (r) => `¥${Math.floor(r() * 500)}`, type: 'err' },
+        { label: 'Resource Alloc', valueFn: () => 'DEPLETED' },
+        { label: 'Purchase Urge', valueFn: (r) => `${Math.floor(r() * 50 + 50)}%`, type: 'warn' },
+      ]},
+      { keys: ['仕事', '会議', '残業', '勉強', 'テスト', '締め', '上司', '仕事'], items: [
+        { label: 'CPU Usage', valueFn: (r) => `${Math.floor(r() * 35 + 65)}%`, type: 'warn' },
+        { label: 'Task Queue', valueFn: (r) => `${Math.floor(r() * 20 + 8)} pending` },
+        { label: 'Process Status', valueFn: () => 'RUNNING' },
+        { label: 'Deadline', valueFn: (r) => r() > 0.5 ? 'CRITICAL' : 'APPROACHING', type: 'warn' },
+      ]},
+      { keys: ['雨', '暑', '寒', '晴', '天気', '風邪', '頭痛'], items: [
+        { label: 'Atmospheric', valueFn: (r) => r() > 0.5 ? 'UNSTABLE' : 'NORMAL' },
+        { label: 'Bio Sensor', valueFn: (r) => r() > 0.6 ? 'ALERT' : 'OK', type: 'warn' },
+        { label: 'External Temp', valueFn: (r) => `${Math.floor(r() * 30 + 5)}°C` },
+      ]},
+      { keys: ['WiFi', '電池', '充電', '読み込', '更新', 'バグ', '動か', '重い', 'SNS', 'スマホ'], items: [
+        { label: 'Signal Strength', valueFn: (r) => `${Math.floor(r() * 40 + 10)}%`, type: 'warn' },
+        { label: 'Network', valueFn: (r) => r() > 0.5 ? 'DISCONNECTED' : 'UNSTABLE', type: 'err' },
+        { label: 'Battery', valueFn: (r) => `${Math.floor(r() * 25 + 3)}%`, type: 'err' },
+        { label: 'System Log', valueFn: () => 'RETRY...' },
+      ]},
+      { keys: ['寂', '一人', '話し', '連絡', '返信', '既読', '誰か'], items: [
+        { label: 'Humanity Module', valueFn: (r) => `${Math.floor(r() * 40 + 20)}%`, type: 'warn' },
+        { label: 'Connection', valueFn: (r) => r() > 0.5 ? 'SEEKING' : 'WAITING' },
+        { label: 'Signal Strength', valueFn: (r) => `${Math.floor(r() * 30 + 5)}%`, type: 'warn' },
+      ]},
+      { keys: ['忘', '探し', 'なく', '迷', '道'], items: [
+        { label: 'Memory Status', valueFn: () => 'CORRUPTED' },
+        { label: 'Search Index', valueFn: (r) => `${Math.floor(r() * 100)}% scanned` },
+        { label: 'GPS', valueFn: () => 'LOST SIGNAL', type: 'err' },
+      ]},
+      { keys: ['後で', '明日', '今度', 'また', 'サボ', 'ダラ', '休み', '何も'], items: [
+        { label: 'Priority Queue', valueFn: () => 'DEFERRED' },
+        { label: 'Slack Module', valueFn: (r) => `${Math.floor(r() * 50 + 50)}%`, type: 'warn' },
+        { label: 'Power Mode', valueFn: () => 'LOW ENERGY' },
+      ]},
+    ];
+
+    const kekoroboGenericStatuses = [
+      { label: 'CPU Usage', valueFn: (r) => `${Math.floor(r() * 80 + 10)}%` },
+      { label: 'Memory Status', valueFn: (r) => r() > 0.7 ? 'OPTIMAL' : 'FRAGMENTED' },
+      { label: 'Process Status', valueFn: (r) => ['IDLE', 'RUNNING', 'WAITING'][Math.floor(r() * 3)] },
+      { label: 'Signal Strength', valueFn: (r) => `${Math.floor(r() * 60 + 30)}%` },
+      { label: 'System Log', valueFn: (r) => r() > 0.5 ? 'OK' : 'CHECK' },
+      { label: 'Performance', valueFn: (r) => `${Math.floor(r() * 50 + 40)}%` },
+      { label: 'Power Mode', valueFn: (r) => ['NORMAL', 'ECO', 'TURBO'][Math.floor(r() * 3)] },
+      { label: 'Humanity Module', valueFn: (r) => `${Math.floor(r() * 60 + 20)}%` },
+      { label: 'Emotion Engine', valueFn: (r) => ['STABLE', 'ACTIVE', 'UNKNOWN'][Math.floor(r() * 3)] },
+      { label: 'Warning', valueFn: (r) => r() > 0.6 ? 'NONE' : 'DETECTED', type: 'warn' },
+      { label: 'Sync Status', valueFn: (r) => r() > 0.4 ? 'SYNCED' : 'PENDING' },
+      { label: 'Uptime', valueFn: (r) => `${Math.floor(r() * 20 + 1)}h ${Math.floor(r() * 59)}m` },
+      { label: 'Error Code', valueFn: (r) => r() > 0.7 ? '0000' : `W${Math.floor(r() * 900 + 100)}` },
+      { label: 'Translation', valueFn: () => 'COMPLETE' },
+      { label: 'Keko-Robo OS', valueFn: () => 'v3.14.159' },
+    ];
+
+    function generateKekoRoboStatuses(human, robot) {
+      const combined = human + robot;
+      const rnd = seededRandom(hashString(combined));
+      const matched = [];
+
+      kekoroboKeywordStatuses.forEach((group) => {
+        if (group.keys.some((k) => combined.includes(k))) {
+          group.items.forEach((item) => matched.push(item));
+        }
+      });
+
+      const matchedLabels = new Set(matched.map((m) => m.label));
+      const pool = [...matched];
+      kekoroboGenericStatuses.forEach((item) => {
+        if (!matchedLabels.has(item.label)) pool.push(item);
+      });
+
+      const count = 4 + Math.floor(rnd() * 3);
+      const picked = [];
+      const usedLabels = new Set();
+      const shuffled = pool.slice().sort(() => rnd() - 0.5);
+      for (let i = 0; i < shuffled.length && picked.length < count; i++) {
+        const item = shuffled[i];
+        if (usedLabels.has(item.label)) continue;
+        picked.push({
+          label: item.label,
+          value: item.valueFn(rnd),
+          type: item.type || '',
+        });
+        usedLabels.add(item.label);
+      }
+
+      return picked;
+    }
+
+    function renderKekoRoboStatuses(human, robot) {
+      const layer = document.getElementById('kekoroboStatusLayer');
+      if (!layer) return;
+      layer.innerHTML = '';
+      const statuses = generateKekoRoboStatuses(human, robot);
+      statuses.forEach((status, i) => {
+        const pos = kekoroboStatusPositions[i % kekoroboStatusPositions.length];
+        const el = document.createElement('div');
+        el.className = 'kekorobo-status' + (status.type ? ` kekorobo-status--${status.type}` : '');
+        Object.assign(el.style, pos);
+        el.innerHTML = `<span class="kekorobo-status__label">${status.label}</span><span class="kekorobo-status__value">${status.value}</span>`;
+        layer.appendChild(el);
+      });
+      layer.classList.add('is-on');
+      layer.setAttribute('aria-hidden', 'false');
+    }
+
+    function updateKekoRoboLayers(isOn) {
+      const bg = document.getElementById('kekoroboBg');
+      const hud = document.getElementById('kekoroboHud');
+      const statusLayer = document.getElementById('kekoroboStatusLayer');
+      [bg, hud].forEach((el) => {
+        if (!el) return;
+        if (isOn) {
+          el.classList.add('is-on');
+          el.setAttribute('aria-hidden', 'false');
+        } else {
+          el.classList.remove('is-on');
+          el.setAttribute('aria-hidden', 'true');
+        }
+      });
+      if (!isOn && statusLayer) {
+        statusLayer.classList.remove('is-on');
+        statusLayer.setAttribute('aria-hidden', 'true');
+        statusLayer.innerHTML = '';
+      }
+    }
+
     function getRandomQuote() {
       // 1/100の確率で「Today is a good day!」をキラキラ表示
       if (Math.random() < 0.01) {
@@ -1780,25 +2622,32 @@
       let pool;
       let category;
 
-      if (rand < 0.47) {
+      if (rand < 0.44) {
         pool = funnyQuotes;
         category = 'funny';
-      } else if (rand < 0.65) {
+      } else if (rand < 0.60) {
         pool = seriousQuotes;
         category = 'serious';
-      } else if (rand < 0.83) {
+      } else if (rand < 0.76) {
         pool = famousQuotes;
         category = 'famous';
-      } else if (rand < 0.91) {
+      } else if (rand < 0.84) {
         pool = kekoQuotes;
         category = 'keko';
+      } else if (rand < 0.92) {
+        pool = kekoRoboQuotes;
+        category = 'kekorobo';
       } else {
         pool = aiQuotes;
         category = 'ai';
       }
 
       const index = Math.floor(Math.random() * pool.length);
-      return { quoteData: pool[index], category: category };
+      const quoteData = pool[index];
+      if (category === 'kekorobo') {
+        return { quoteData, category, kekorobo: true };
+      }
+      return { quoteData, category };
     }
 
     function formatDate() {
@@ -1844,8 +2693,6 @@
       const quoteEl = document.getElementById('quote');
       const swipeTrack = document.getElementById('swipeTrack');
       document.getElementById('dateLabel').textContent = formatDate();
-      quoteEl.textContent = quoteData.text;
-      document.getElementById('subtext').textContent = quoteData.sub;
 
       if (swipeTrack) {
         swipeTrack.style.transition = 'none';
@@ -1853,11 +2700,35 @@
       }
 
       if (result.sparkle) {
+        quoteEl.classList.remove('kekorobo-active');
+        quoteEl.innerHTML = '';
+        quoteEl.textContent = quoteData.text;
         quoteEl.classList.add('sparkle');
         document.body.className = 'theme-sparkle';
-      } else {
+        updateKekoRoboLayers(false);
+      } else if (result.category === 'kekorobo') {
         quoteEl.classList.remove('sparkle');
+        quoteEl.classList.add('kekorobo-active');
+        quoteEl.innerHTML = `
+          <div class="kekorobo-quote-block">
+            <p class="kekorobo-human"><span class="kekorobo-label">人間</span>「${quoteData.human}」</p>
+            <div class="kekorobo-arrow">▼</div>
+            <p class="kekorobo-robot"><span class="kekorobo-label">けこロボ</span>「${quoteData.robot}」</p>
+          </div>`;
+        document.getElementById('subtext').textContent = quoteData.sub;
+        document.body.className = 'theme-kekorobo';
+        document.documentElement.style.setProperty('--font-family', "'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif");
+        updateKekoRayLayer(result);
+        updateKekoRoboLayers(true);
+        renderKekoRoboStatuses(quoteData.human, quoteData.robot);
+        return;
+      } else {
+        quoteEl.classList.remove('sparkle', 'kekorobo-active');
+        quoteEl.innerHTML = '';
+        quoteEl.textContent = quoteData.text;
+        document.getElementById('subtext').textContent = quoteData.sub;
         document.body.className = 'theme-' + result.category;
+        updateKekoRoboLayers(false);
       }
 
       const chosenFont = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
@@ -1866,11 +2737,141 @@
       updateKekoRayLayer(result);
     }
 
+    const DEFEAT_RECORDS_KEY = 'everydayQuote_defeatRecords';
+
+    function generateCreatureParams(isLegendary, seed) {
+      let state = (seed >>> 0) || 1;
+      function rnd() {
+        state = (Math.imul(1664525, state) + 1013904223) >>> 0;
+        return state / 4294967296;
+      }
+      const hue1 = Math.floor(rnd() * 360);
+      const hue2 = (hue1 + 40 + Math.floor(rnd() * 80)) % 360;
+      const blobPath = isLegendary
+        ? 'M50 8C78 8 95 32 92 58c-4 38-28 62-52 58C12 118-8 88 12 52 18 38 32 8 50 8z'
+        : 'M50 12C72 4 96 28 88 54 82 78 58 98 38 94 12 88-4 58 18 32 28 18 38 12 50 12z';
+      const eyeCount = 2 + Math.floor(rnd() * 4);
+      const legs = Math.floor(rnd() * 5) + 3;
+      const eyes = [];
+      for (let i = 0; i < eyeCount; i++) {
+        eyes.push({
+          ex: 28 + rnd() * 44,
+          ey: 32 + rnd() * 28,
+          er: 4 + rnd() * 5,
+        });
+      }
+      const tentacles = [];
+      for (let i = 0; i < legs; i++) {
+        const x0 = 20 + (i / (legs - 1 || 1)) * 60;
+        tentacles.push({ x0, sway: (rnd() - 0.5) * 16 });
+      }
+      return { seed, isLegendary, hue1, hue2, blobPath, eyes, tentacles };
+    }
+
+    function renderCreatureSVG(params, svgClass) {
+      const cls = svgClass || 'creature-svg';
+      const { isLegendary, hue1, hue2, blobPath, eyes, tentacles } = params;
+      let eyesHtml = '';
+      eyes.forEach(({ ex, ey, er }) => {
+        eyesHtml += `<ellipse cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" rx="${er.toFixed(1)}" ry="${(er * 0.85).toFixed(1)}" fill="#fff"/><circle cx="${(ex + er * 0.15).toFixed(1)}" cy="${ey.toFixed(1)}" r="${(er * 0.35).toFixed(1)}" fill="#1a1a2e"/>`;
+      });
+      let tentaclesHtml = '';
+      tentacles.forEach(({ x0, sway }) => {
+        tentaclesHtml += `<path d="M${x0.toFixed(0)} 78 Q${(x0 + sway).toFixed(0)} 95 ${(x0 + sway * 1.4).toFixed(0)} 108" fill="none" stroke="hsla(${hue2},55%,38%,0.85)" stroke-width="3" stroke-linecap="round"/>`;
+      });
+      const strokeLeg = isLegendary ? 'gold' : `hsl(${hue2},50%,35%)`;
+      return `<svg class="${cls}" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="${blobPath}" fill="hsl(${hue1},${isLegendary ? 72 : 58}%,${isLegendary ? 58 : 52}%)" stroke="${strokeLeg}" stroke-width="${isLegendary ? 3.2 : 2}"/>
+          ${tentaclesHtml}
+          ${eyesHtml}
+          ${isLegendary ? '<text x="50" y="22" text-anchor="middle" font-size="10" font-weight="bold" fill="#5c4a00">伝説のけこ</text>' : ''}
+        </svg>`;
+    }
+
+    function buildCreatureSVG(isLegendary, seed) {
+      return renderCreatureSVG(generateCreatureParams(isLegendary, seed));
+    }
+
+    function loadDefeatRecords() {
+      try {
+        const raw = localStorage.getItem(DEFEAT_RECORDS_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveDefeatRecords(records) {
+      localStorage.setItem(DEFEAT_RECORDS_KEY, JSON.stringify(records));
+    }
+
+    function formatDefeatDate(iso) {
+      const d = new Date(iso);
+      const y = d.getFullYear();
+      const m = d.getMonth() + 1;
+      const day = d.getDate();
+      const h = String(d.getHours()).padStart(2, '0');
+      const min = String(d.getMinutes()).padStart(2, '0');
+      return `${y}年${m}月${day}日 ${h}:${min}`;
+    }
+
+    function formatDefeatNo(n) {
+      return `No.${String(n).padStart(3, '0')}`;
+    }
+
+    function addDefeatRecord(creatureParams) {
+      const records = loadDefeatRecords();
+      const entry = {
+        no: records.length + 1,
+        defeatedAt: new Date().toISOString(),
+        creature: creatureParams,
+      };
+      records.push(entry);
+      saveDefeatRecords(records);
+      return entry;
+    }
+
+    function renderDefeatArchive() {
+      const body = document.getElementById('defeatArchiveBody');
+      const countEl = document.getElementById('defeatArchiveCount');
+      if (!body) return;
+      const records = loadDefeatRecords();
+      if (countEl) countEl.textContent = String(records.length);
+
+      if (records.length === 0) {
+        body.innerHTML = '<p class="defeat-archive__empty">まだ討伐記録はありません。<br>？？？な生き物を倒すと、ここに記録されます。</p>';
+        return;
+      }
+
+      const cards = records.slice().reverse().map((rec) => {
+        const isLegend = rec.creature && rec.creature.isLegendary;
+        const cardClass = 'defeat-card' + (isLegend ? ' defeat-card--legend' : '');
+        const legendTag = isLegend ? '<span class="defeat-card__legend-tag">LEGEND</span>' : '';
+        const svg = rec.creature ? renderCreatureSVG(rec.creature, 'defeat-card__svg') : '';
+        return `<article class="${cardClass}">
+          ${legendTag}
+          <div class="defeat-card__specimen">${svg}</div>
+          <div class="defeat-card__meta">
+            <div class="defeat-card__no">${formatDefeatNo(rec.no)}</div>
+            <div class="defeat-card__date">${formatDefeatDate(rec.defeatedAt)}</div>
+          </div>
+        </article>`;
+      }).join('');
+
+      body.innerHTML = `<div class="defeat-archive__grid">${cards}</div>`;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       showQuote(getRandomQuote());
+      renderDefeatArchive();
 
       const container = document.querySelector('.container');
       const swipeTrack = document.getElementById('swipeTrack');
+      const defeatArchiveEl = document.getElementById('defeatArchive');
+      const defeatArchiveOpenBtn = document.getElementById('defeatArchiveOpen');
+      const defeatArchiveBackBtn = document.getElementById('defeatArchiveBack');
+      let defeatArchiveOpen = false;
       const likeOverlay = document.getElementById('likeOverlay');
       const likeTitle = document.getElementById('likeTitle');
       const likeYesBtn = document.getElementById('likeYesBtn');
@@ -1911,10 +2912,30 @@
       let creatureComboTimer = null;
       let creatureDefeated = false;
       let creatureDismissBusy = false;
+      let currentCreatureParams = null;
       const COMBO_MS = 720;
 
+      function openDefeatArchive() {
+        defeatArchiveOpen = true;
+        renderDefeatArchive();
+        defeatArchiveEl.classList.add('is-open');
+        defeatArchiveEl.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeDefeatArchive() {
+        defeatArchiveOpen = false;
+        defeatArchiveEl.classList.remove('is-open');
+        defeatArchiveEl.setAttribute('aria-hidden', 'true');
+      }
+
+      defeatArchiveOpenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openDefeatArchive();
+      });
+      defeatArchiveBackBtn.addEventListener('click', closeDefeatArchive);
+
       function isBlockingOverlay() {
-        return overlayOpen || creatureBattleOpen;
+        return overlayOpen || creatureBattleOpen || defeatArchiveOpen;
       }
 
       function tryCreatureEncounter() {
@@ -1924,39 +2945,12 @@
         return null;
       }
 
+      function buildCreatureSVGFromEncounter(isLegendary, seed) {
+        return renderCreatureSVG(generateCreatureParams(isLegendary, seed));
+      }
+
       function buildCreatureSVG(isLegendary, seed) {
-        let state = (seed >>> 0) || 1;
-        function rnd() {
-          state = (Math.imul(1664525, state) + 1013904223) >>> 0;
-          return state / 4294967296;
-        }
-        const hue1 = Math.floor(rnd() * 360);
-        const hue2 = (hue1 + 40 + Math.floor(rnd() * 80)) % 360;
-        const blobPath = isLegendary
-          ? 'M50 8C78 8 95 32 92 58c-4 38-28 62-52 58C12 118-8 88 12 52 18 38 32 8 50 8z'
-          : 'M50 12C72 4 96 28 88 54 82 78 58 98 38 94 12 88-4 58 18 32 28 18 38 12 50 12z';
-        const eyeCount = 2 + Math.floor(rnd() * 4);
-        const legs = Math.floor(rnd() * 5) + 3;
-        let eyes = '';
-        for (let i = 0; i < eyeCount; i++) {
-          const ex = 28 + rnd() * 44;
-          const ey = 32 + rnd() * 28;
-          const er = 4 + rnd() * 5;
-          eyes += `<ellipse cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" rx="${er.toFixed(1)}" ry="${(er * 0.85).toFixed(1)}" fill="#fff"/><circle cx="${(ex + er * 0.15).toFixed(1)}" cy="${(ey).toFixed(1)}" r="${(er * 0.35).toFixed(1)}" fill="#1a1a2e"/>`;
-        }
-        let tentacles = '';
-        for (let i = 0; i < legs; i++) {
-          const x0 = 20 + (i / (legs - 1 || 1)) * 60;
-          const sway = (rnd() - 0.5) * 16;
-          tentacles += `<path d="M${x0.toFixed(0)} 78 Q${(x0 + sway).toFixed(0)} 95 ${(x0 + sway * 1.4).toFixed(0)} 108" fill="none" stroke="hsla(${hue2},55%,38%,0.85)" stroke-width="3" stroke-linecap="round"/>`;
-        }
-        const strokeLeg = isLegendary ? 'gold' : `hsl(${hue2},50%,35%)`;
-        return `<svg class="creature-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="${blobPath}" fill="hsl(${hue1},${isLegendary ? 72 : 58}%,${isLegendary ? 58 : 52}%)" stroke="${strokeLeg}" stroke-width="${isLegendary ? 3.2 : 2}"/>
-          ${tentacles}
-          ${eyes}
-          ${isLegendary ? '<text x="50" y="22" text-anchor="middle" font-size="10" font-weight="bold" fill="#5c4a00">伝説のけこ</text>' : ''}
-        </svg>`;
+        return buildCreatureSVGFromEncounter(isLegendary, seed);
       }
 
       function placeCreatureHost() {
@@ -2036,6 +3030,7 @@
         creatureFxLayer.innerHTML = '';
         creatureComboEl.textContent = '';
         creatureCombo = 0;
+        currentCreatureParams = null;
         if (creatureComboTimer) window.clearTimeout(creatureComboTimer);
         creatureComboTimer = null;
         showQuote(getRandomQuote());
@@ -2056,6 +3051,10 @@
           creatureDefeated = true;
           if (creatureComboTimer) window.clearTimeout(creatureComboTimer);
           creatureComboTimer = null;
+          if (currentCreatureParams) {
+            addDefeatRecord(currentCreatureParams);
+            renderDefeatArchive();
+          }
           runCreatureDefeatSequence();
         }
       }
@@ -2064,11 +3063,12 @@
         creatureBattleOpen = true;
         creatureDefeated = false;
         const seed = Date.now() % 100000 + (isLegendary ? 7777 : 0);
+        currentCreatureParams = generateCreatureParams(isLegendary, seed);
         creatureHpMax = isLegendary ? 42 + Math.floor(Math.random() * 14) : 16 + Math.floor(Math.random() * 12);
         creatureHp = creatureHpMax;
         creatureCombo = 0;
         creatureComboEl.textContent = '';
-        creatureHost.innerHTML = buildCreatureSVG(isLegendary, seed);
+        creatureHost.innerHTML = renderCreatureSVG(currentCreatureParams);
         placeCreatureHost();
         creatureBattleEl.classList.toggle('is-legend', isLegendary);
         creatureTagEl.textContent = isLegendary ? '伝説のけこ生物（謎）' : '？？？な生き物';
