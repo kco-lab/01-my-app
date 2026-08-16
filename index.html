@@ -153,236 +153,162 @@
       z-index: 1;
     }
 
-    /* けこロボ：サイバー端末・HUD */
+    /* けこロボ：端末UI（モノクロ・格言主役） */
     body.theme-kekorobo {
       --bg-1: #000000;
-      --bg-2: #020810;
-      --bg-3: #001020;
-      --text: #c8f0ff;
-      --text-soft: #5a9ab8;
-      --accent: #00d4ff;
+      --bg-2: #000000;
+      --bg-3: #000000;
+      --text: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.55);
+      --accent: #ffffff;
     }
     body.theme-kekorobo {
       background: #000000;
       font-family: 'Zen Kaku Gothic New', sans-serif;
     }
-    body.theme-kekorobo::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        linear-gradient(rgba(0, 180, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 180, 255, 0.04) 1px, transparent 1px),
-        radial-gradient(ellipse at 50% 0%, rgba(0, 120, 255, 0.12) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 90%, rgba(0, 80, 200, 0.08) 0%, transparent 45%);
-      background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
-      pointer-events: none;
-      z-index: 0;
+    html:has(body.theme-kekorobo) {
+      background: #000000;
     }
+    body.theme-kekorobo::before,
     body.theme-kekorobo::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 200, 255, 0.015) 2px,
-        rgba(0, 200, 255, 0.015) 4px
-      );
-      pointer-events: none;
-      z-index: 0;
-      animation: kekoroboScan 8s linear infinite;
+      content: none;
     }
-    @keyframes kekoroboScan {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(32px); }
+    body.theme-kekorobo .kekorobo-bg,
+    body.theme-kekorobo .kekorobo-hud {
+      display: none !important;
     }
-    .kekorobo-bg {
+    body.theme-kekorobo .container {
+      position: relative;
+      z-index: 1;
+      max-width: min(360px, 100%);
+    }
+    body.theme-kekorobo .date-label,
+    body.theme-kekorobo .subtext,
+    body.theme-kekorobo .refresh-hint {
       display: none;
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
     }
-    .kekorobo-bg.is-on {
-      display: block;
+    body.theme-kekorobo .quote {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      margin-bottom: 0;
     }
-    .kekorobo-bg__hex {
-      position: absolute;
-      width: 48px;
-      height: 55px;
-      opacity: 0.12;
-      background: transparent;
-      border: 1px solid rgba(0, 200, 255, 0.5);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      animation: kekoroboHexPulse 4s ease-in-out infinite;
+    body.theme-kekorobo .quote::before,
+    body.theme-kekorobo .quote::after {
+      content: none;
     }
-    .kekorobo-bg__hex:nth-child(1) { top: 8%; left: 6%; animation-delay: 0s; }
-    .kekorobo-bg__hex:nth-child(2) { top: 15%; right: 8%; width: 36px; height: 42px; animation-delay: 1.2s; }
-    .kekorobo-bg__hex:nth-child(3) { bottom: 18%; left: 10%; width: 56px; height: 65px; animation-delay: 0.6s; }
-    .kekorobo-bg__hex:nth-child(4) { bottom: 12%; right: 12%; animation-delay: 2s; }
-    .kekorobo-bg__hex:nth-child(5) { top: 42%; left: 3%; width: 28px; height: 32px; opacity: 0.08; animation-delay: 1.8s; }
-    .kekorobo-bg__hex:nth-child(6) { top: 55%; right: 4%; width: 32px; height: 37px; opacity: 0.1; animation-delay: 0.3s; }
-    @keyframes kekoroboHexPulse {
-      0%, 100% { opacity: 0.08; box-shadow: 0 0 8px rgba(0, 200, 255, 0.2); }
-      50% { opacity: 0.22; box-shadow: 0 0 16px rgba(0, 200, 255, 0.45); }
-    }
-    .kekorobo-bg__circuit {
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath d='M0 40h60v20H40v40H0M140 0v40h20v20h40V0M200 160h-40v-20h-20v-40h40M60 200v-40h20v-20h40v60' fill='none' stroke='%2300b4ff' stroke-width='0.6' opacity='0.25'/%3E%3Ccircle cx='60' cy='40' r='2' fill='%2300d4ff' opacity='0.4'/%3E%3Ccircle cx='140' cy='60' r='2' fill='%2300d4ff' opacity='0.35'/%3E%3Ccircle cx='160' cy='160' r='2' fill='%2300d4ff' opacity='0.4'/%3E%3C/svg%3E");
-      background-size: 180px 180px;
-      opacity: 0.35;
-    }
-    .kekorobo-bg__line {
-      position: absolute;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.6), transparent);
-      animation: kekoroboLineSweep 6s ease-in-out infinite;
-    }
-    .kekorobo-bg__line:nth-child(8) { top: 22%; left: 0; right: 0; animation-delay: 0s; }
-    .kekorobo-bg__line:nth-child(9) { top: 68%; left: 0; right: 0; animation-delay: 2.5s; opacity: 0.5; }
-    @keyframes kekoroboLineSweep {
-      0%, 100% { opacity: 0.15; transform: scaleX(0.6); }
-      50% { opacity: 0.7; transform: scaleX(1); }
-    }
-    .kekorobo-hud {
-      display: none;
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .kekorobo-hud.is-on {
-      display: block;
-    }
-    .kekorobo-hud__corner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-color: rgba(0, 200, 255, 0.35);
-      border-style: solid;
-      border-width: 0;
-    }
-    .kekorobo-hud__corner--tl { top: max(12px, env(safe-area-inset-top)); left: 12px; border-top-width: 2px; border-left-width: 2px; }
-    .kekorobo-hud__corner--tr { top: max(12px, env(safe-area-inset-top)); right: 12px; border-top-width: 2px; border-right-width: 2px; }
-    .kekorobo-hud__corner--bl { bottom: max(12px, env(safe-area-inset-bottom)); left: 12px; border-bottom-width: 2px; border-left-width: 2px; }
-    .kekorobo-hud__corner--br { bottom: max(12px, env(safe-area-inset-bottom)); right: 12px; border-bottom-width: 2px; border-right-width: 2px; }
     .kekorobo-status-layer {
       display: none;
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 0 0 max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     }
     .kekorobo-status-layer.is-on {
-      display: block;
+      display: flex;
     }
-    .kekorobo-status {
-      position: absolute;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: clamp(8px, 2.2vw, 10px);
-      line-height: 1.45;
-      color: rgba(0, 210, 255, 0.55);
-      background: rgba(0, 20, 40, 0.65);
-      border: 1px solid rgba(0, 180, 255, 0.22);
-      padding: 5px 8px;
-      max-width: 130px;
-      letter-spacing: 0.04em;
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 0 12px rgba(0, 150, 255, 0.08);
+    .kekorobo-status-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 220px;
     }
-    .kekorobo-status::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 6px;
-      height: 6px;
-      border-top: 1px solid rgba(0, 220, 255, 0.5);
-      border-left: 1px solid rgba(0, 220, 255, 0.5);
+    .kekorobo-status__row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: clamp(11px, 3vw, 13px);
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.88);
+      letter-spacing: 0.02em;
+    }
+    .kekorobo-status__row--text {
+      gap: 6px;
     }
     .kekorobo-status__label {
-      display: block;
-      font-size: 0.85em;
-      color: rgba(0, 160, 220, 0.45);
-      margin-bottom: 1px;
+      flex-shrink: 0;
+      min-width: 5.5em;
+      white-space: nowrap;
+    }
+    .kekorobo-status__bar {
+      flex: 1;
+      min-width: 88px;
+      max-width: 120px;
+      height: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      border-radius: 2px;
+      overflow: hidden;
+      background: transparent;
+    }
+    .kekorobo-status__bar-fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 1px;
+      transition: width 0.4s ease;
+    }
+    .kekorobo-status__bar-fill.is-critical {
+      background: #e84040;
     }
     .kekorobo-status__value {
-      color: rgba(100, 220, 255, 0.65);
-    }
-    .kekorobo-status--warn .kekorobo-status__value {
-      color: rgba(255, 180, 80, 0.7);
-    }
-    .kekorobo-status--err .kekorobo-status__value {
-      color: rgba(255, 100, 120, 0.75);
-    }
-    body.theme-kekorobo .container {
-      position: relative;
-      z-index: 1;
-    }
-    body.theme-kekorobo .quote {
-      font-family: 'Zen Kaku Gothic New', sans-serif;
-    }
-    body.theme-kekorobo .quote::before,
-    body.theme-kekorobo .quote::after {
-      content: none;
+      font-size: 0.92em;
+      color: rgba(255, 255, 255, 0.65);
     }
     .kekorobo-quote-block {
       text-align: center;
+      padding: 8px 0 120px;
+    }
+    .kekorobo-title {
+      font-size: clamp(22px, 6.5vw, 28px);
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.06em;
+      margin: 0 0 28px;
+      line-height: 1.3;
+    }
+    .kekorobo-box {
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      border-radius: 22px;
+      padding: clamp(22px, 6vw, 32px) clamp(18px, 5vw, 24px);
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .kekorobo-box--human {
+      margin-bottom: 0;
+    }
+    .kekorobo-box--robot {
+      margin-top: 0;
     }
     .kekorobo-human,
     .kekorobo-robot {
-      font-size: clamp(18px, 5.5vw, 24px);
-      line-height: 1.65;
+      font-size: clamp(20px, 6vw, 28px);
+      line-height: 1.55;
       margin: 0;
-    }
-    .kekorobo-human {
-      color: rgba(180, 210, 230, 0.85);
-      font-weight: 400;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
     }
     .kekorobo-robot {
-      color: #00e5ff;
-      font-weight: 500;
-      text-shadow: 0 0 20px rgba(0, 212, 255, 0.35), 0 0 40px rgba(0, 120, 255, 0.15);
+      font-size: clamp(18px, 5.2vw, 24px);
+      line-height: 1.6;
     }
-    .kekorobo-label {
-      display: inline-block;
-      font-family: 'Orbitron', 'Share Tech Mono', monospace;
-      font-size: 0.55em;
+    .kekorobo-speaker {
+      text-align: left;
+      font-size: clamp(13px, 3.6vw, 15px);
       font-weight: 500;
-      letter-spacing: 0.12em;
-      color: rgba(0, 180, 255, 0.6);
-      margin-right: 0.4em;
-      vertical-align: middle;
+      color: rgba(255, 255, 255, 0.88);
+      margin: 18px 0 8px 4px;
+      letter-spacing: 0.04em;
     }
     .kekorobo-arrow {
-      font-size: 14px;
-      color: rgba(0, 200, 255, 0.45);
-      margin: 10px 0;
-      letter-spacing: 0.2em;
-      animation: kekoroboArrowBlink 2s ease-in-out infinite;
-    }
-    @keyframes kekoroboArrowBlink {
-      0%, 100% { opacity: 0.35; }
-      50% { opacity: 0.85; }
-    }
-    body.theme-kekorobo .date-label {
-      font-family: 'Share Tech Mono', monospace;
-      letter-spacing: 0.15em;
-      color: rgba(0, 180, 255, 0.5);
-    }
-    body.theme-kekorobo .subtext {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 13px;
-      color: rgba(0, 160, 220, 0.45);
-    }
-    body.theme-kekorobo .refresh-hint {
-      font-family: 'Share Tech Mono', monospace;
-      color: rgba(0, 140, 200, 0.35);
+      width: 0;
+      height: 0;
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+      border-top: 14px solid rgba(255, 255, 255, 0.92);
+      margin: 20px auto;
     }
 
     /* キラキラ表示時：黒背景 */
@@ -2436,16 +2362,66 @@
       };
     }
 
-    const kekoroboStatusPositions = [
-      { top: '12%', left: '4%' },
-      { top: '14%', right: '4%' },
-      { top: '28%', left: '2%' },
-      { top: '30%', right: '2%' },
-      { top: '72%', left: '3%' },
-      { top: '74%', right: '3%' },
-      { top: '88%', left: '6%' },
-      { top: '86%', right: '6%' },
-    ];
+    const kekoroboStatusLabelJa = {
+      'CPU Usage': 'CPU使用率',
+      'Battery': 'Battery残量',
+      'Energy Level': 'Battery残量',
+      'Error Code': 'Error Code',
+      'Memory Status': 'Memory',
+      'Humanity Module': 'Humanity',
+      'Emotion Engine': 'Emotion',
+      'Signal Strength': 'Signal',
+      'Performance': 'Performance',
+      'Power Mode': 'Power Mode',
+    };
+
+    function formatKekoRoboStatusRow(status) {
+      const label = kekoroboStatusLabelJa[status.label] || status.label;
+      const pctMatch = status.value.match(/^(\d+)%$/);
+      if (pctMatch) {
+        const pct = Math.min(100, parseInt(pctMatch[1], 10));
+        const isCritical = pct <= 25 || status.type === 'err';
+        return `<div class="kekorobo-status__row">
+          <span class="kekorobo-status__label">${label}</span>
+          <div class="kekorobo-status__bar" aria-hidden="true">
+            <div class="kekorobo-status__bar-fill${isCritical ? ' is-critical' : ''}" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+      }
+      if (status.label === 'Error Code') {
+        const code = status.value && status.value !== '0000' ? `<span class="kekorobo-status__value">${status.value}</span>` : '';
+        return `<div class="kekorobo-status__row kekorobo-status__row--text">
+          <span class="kekorobo-status__label">${label}</span>${code}
+        </div>`;
+      }
+      return `<div class="kekorobo-status__row kekorobo-status__row--text">
+        <span class="kekorobo-status__label">${label}</span>
+        <span class="kekorobo-status__value">${status.value}</span>
+      </div>`;
+    }
+
+    function renderKekoRoboStatuses(human, robot) {
+      const layer = document.getElementById('kekoroboStatusLayer');
+      if (!layer) return;
+      layer.innerHTML = '';
+      let statuses = generateKekoRoboStatuses(human, robot);
+      statuses.sort((a, b) => {
+        const score = (s) => {
+          if (/^\d+%$/.test(s.value)) return 0;
+          if (s.label === 'Error Code') return 2;
+          return 1;
+        };
+        return score(a) - score(b);
+      });
+      statuses = statuses.slice(0, 3);
+
+      const panel = document.createElement('div');
+      panel.className = 'kekorobo-status-panel';
+      panel.innerHTML = statuses.map(formatKekoRoboStatusRow).join('');
+      layer.appendChild(panel);
+      layer.classList.add('is-on');
+      layer.setAttribute('aria-hidden', 'false');
+    }
 
     const kekoroboKeywordStatuses = [
       { keys: ['お腹', '空', '食べ', '腹', 'ご飯', 'おやつ', '甘い', 'コーヒー', 'ビール', '喉'], items: [
@@ -2568,23 +2544,6 @@
       }
 
       return picked;
-    }
-
-    function renderKekoRoboStatuses(human, robot) {
-      const layer = document.getElementById('kekoroboStatusLayer');
-      if (!layer) return;
-      layer.innerHTML = '';
-      const statuses = generateKekoRoboStatuses(human, robot);
-      statuses.forEach((status, i) => {
-        const pos = kekoroboStatusPositions[i % kekoroboStatusPositions.length];
-        const el = document.createElement('div');
-        el.className = 'kekorobo-status' + (status.type ? ` kekorobo-status--${status.type}` : '');
-        Object.assign(el.style, pos);
-        el.innerHTML = `<span class="kekorobo-status__label">${status.label}</span><span class="kekorobo-status__value">${status.value}</span>`;
-        layer.appendChild(el);
-      });
-      layer.classList.add('is-on');
-      layer.setAttribute('aria-hidden', 'false');
     }
 
     function updateKekoRoboLayers(isOn) {
@@ -2711,9 +2670,15 @@
         quoteEl.classList.add('kekorobo-active');
         quoteEl.innerHTML = `
           <div class="kekorobo-quote-block">
-            <p class="kekorobo-human"><span class="kekorobo-label">人間</span>「${quoteData.human}」</p>
-            <div class="kekorobo-arrow">▼</div>
-            <p class="kekorobo-robot"><span class="kekorobo-label">けこロボ</span>「${quoteData.robot}」</p>
+            <h2 class="kekorobo-title">けこロボ語変換</h2>
+            <div class="kekorobo-box kekorobo-box--human">
+              <p class="kekorobo-human">${quoteData.human}</p>
+            </div>
+            <div class="kekorobo-arrow" aria-hidden="true"></div>
+            <p class="kekorobo-speaker">けこロボ</p>
+            <div class="kekorobo-box kekorobo-box--robot">
+              <p class="kekorobo-robot">${quoteData.robot}</p>
+            </div>
           </div>`;
         document.getElementById('subtext').textContent = quoteData.sub;
         document.body.className = 'theme-kekorobo';
